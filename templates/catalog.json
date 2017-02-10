@@ -1,0 +1,119 @@
+{
+    "name": "Catalog"
+    , "namespace": "common"
+    , "removeMeans": "DELETION"
+    , "authNeeded": false
+    , "displayOnMenu": false
+    , "prefix": "ctg"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "AUTONUMERIC"
+        , "HEADERS"
+        , "TABLE_NAME(CATALOG)"
+        , "VIEW_NAME(VICATALOG)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "order": 1
+            , "dbName": "ctg_id"
+            , "isPK": true
+            , "size": 20
+            , "minLength": 1
+            , "dbComment": "Id for the catalog"
+            , "entName": "CatalogId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Catalog Id"
+        },{
+            "templateId": "integer"
+            , "order": 2
+            , "dbName": "ctg_sequential"
+            , "isPK": true
+            , "dbComment": "Unique sequential inside the catalog, starting on 1"
+            , "entName": "Sequential"
+            , "captureRequired": true
+            , "specialRules": [
+                "AUTONUM(CTG_ID)"
+            ]
+            , "displayName": "Sequential Number"
+        },{
+            "templateId": "string"
+            , "order": 3
+            , "dbName": "ctg_name"
+            , "size": 150
+            , "minLength": 1
+            , "dbComment": "Identifier to use when showing the field value"
+            , "entName": "Name"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD(CTG_ID)"
+                , "DUPLICITY_EDIT(CTG_ID)"
+            ]
+            , "displayName": "Name"
+        },{
+            "templateId": "string"
+            , "order": 4
+            , "dbName": "ctg_description"
+            , "size": 250
+            , "allowNull": true
+            , "dbComment": "Explain how is this value intended to be used"
+            , "entName": "Description"
+            , "displayName": "Description"
+        },{
+            "templateId": "string"
+            , "order": 5
+            , "dbName": "ctg_meta1"
+            , "size": 250
+            , "allowNull": true
+            , "dbComment": "Any metadata related to this value"
+            , "entName": "Metadata1"
+            , "displayName": "Metadata 1"
+        },{
+            "templateId": "string"
+            , "order": 6
+            , "dbName": "ctg_meta2"
+            , "size": 250
+            , "allowNull": true
+            , "dbComment": "Any other metadata related to this value"
+            , "entName": "Metadata2"
+            , "displayName": "Metadata 2"
+        },{
+            "templateId": "integer"
+            , "order": 7
+            , "dbName": "ctg_ctg_permissions"
+            , "dbComment": "Permissions on this record or related records"
+            , "entName": "Permission"
+            , "captureRequired": true
+            , "displayName": "Permission Level"
+            , "catalogId": "CATALOG_PERMISSIONS"
+        },{
+            "templateId": "creationDate"
+            , "order": 8
+        },{
+            "templateId": "modificationDate"
+            , "order": 9
+        },{
+            "templateId": "status"
+            , "order": 10
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "order": 11
+            , "linkedField": "_ctg_status"
+        },{
+            "templateId": "catalog"
+            , "order": 12
+            , "linkedField": "_ctg_permissions"
+        }
+    ]
+    , "view": [
+        {
+            "joinType": "INNER"
+            , "joinTable": "CATALOG CATALOG2"
+            , "joinStatement": "CATALOG.CTG_ID = CATALOG2.CTG_ID AND CATALOG.CTG_SEQUENTIAL = CATALOG2.CTG_SEQUENTIAL"
+        }
+    ]
+}

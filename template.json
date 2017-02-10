@@ -1,0 +1,122 @@
+[
+    {
+        "templateId": "base"
+        , "dbName": ""
+        , "dbType": ""
+        , "isTableField": true
+        , "isPK": false
+        , "size": 0
+        , "decimal": 0
+        , "minLength": 0
+        , "allowNull": false
+        , "default": ""
+        , "dbComment": ""
+        , "catalogId": ""
+        , "originTable": ""
+        , "linkedField": ""
+        , "entName": ""
+        , "formControl": ""
+        , "captureRequired": false
+        , "appearsByDefaultOnGrid": true
+        , "specialRules": []
+        , "displayName": ""
+        , "tooltip": ""
+    },{
+        "templateId": "order"
+        , "gridOrder": 0
+        , "orderOnNew": 0
+        , "orderOnDetails": 0
+        , "orderOnEdit": 0
+        , "orderOnImport": 0
+    },{
+        "templateId": "creationDate"
+        , "dbName": "_date_creation"
+        , "dbType": "datetime"
+        , "dbComment": "Creation date of record in table"
+        , "entName": "CreationDate"
+        , "formControl": "Datetime"
+        , "appearsByDefaultOnGrid": true
+        , "specialRules": [
+            "SAVE_DATE_AT_NEW"
+        ]
+        , "displayName": "Creation Date"
+    },{
+        "templateId": "modificationDate"
+        , "dbName": "_date_mod"
+        , "dbType": "datetime"
+        , "dbComment": "Last modification date of record in table"
+        , "entName": "ModDate"
+        , "formControl": "Datetime"
+        , "appearsByDefaultOnGrid": true
+        , "specialRules": [
+            "SAVE_DATE_AT_NEW"
+            , "SAVE_DATE_AT_EDIT"
+        ]
+        , "displayName": "Last Modification Date"
+    },{
+        "templateId": "status"
+        , "dbName": "_ctg_status"
+        , "dbComment": "Record status in table"
+        , "originTable": "CATALOG"
+        , "entName": "Status"
+        , "formControl": "Combobox"
+        , "displayName": "Status"
+    },{
+        "templateId": "catalog"
+        , "dbType": "string"
+        , "isTableField": false
+        , "size": 250
+        , "allowNull": true
+        , "originTable": "CATALOG"
+        , "formControl": "Textbox"
+    },{
+        "templateId": "integer"
+        , "dbType": "integer"
+        , "size": 4
+        , "minLength": 1
+        , "formControl": "Textbox"
+    },{
+        "templateId": "long"
+        , "dbType": "long"
+        , "size": 9
+        , "minLength": 1
+        , "formControl": "Textbox"
+    },{
+        "templateId": "double"
+        , "dbType": "double"
+        , "size": 19
+        , "decimal": 2
+        , "formControl": "Textbox"
+    },{
+        "templateId": "date"
+        , "dbType": "date"
+        , "size": 10
+        , "allowNull": true
+        , "formControl": "date"
+    },{
+        "templateId": "datetime"
+        , "dbType": "datetime"
+        , "size": 16
+        , "allowNull": true
+        , "formControl": "datetime"
+    },{
+        "templateId": "string"
+        , "dbType": "string"
+        , "formControl": "Textbox"
+    },{
+        "templateId": "clob"
+    },{
+        "templateId": "blob"
+    },{
+        "templateId": "permissions_all"
+        , "permissions": [
+            "access"
+            , "add"
+            , "edit"
+            , "remove"
+            , "report"
+            , "export"
+            , "import"
+        ]
+    }
+]

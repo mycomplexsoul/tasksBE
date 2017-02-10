@@ -1,0 +1,11 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "description": "backend",
+  "main": "main.js",
+  "dependencies": {
+    "mysql": "^2.12.0"
+  },
+  "author": "mycomplexsoul",
+  "license": "UNLICENSED"
+}

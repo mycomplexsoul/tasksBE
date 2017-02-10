@@ -1,0 +1,160 @@
+{
+    "name": "Task"
+    , "namespace": "common"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": false
+    , "prefix": "tsk"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "AUTONUMERIC"
+        , "HEADERS"
+        , "TABLE_NAME(TASK)"
+        , "VIEW_NAME(VITASK)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "tsk_id"
+            , "isPK": true
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Id for the task"
+            , "entName": "TaskId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Task Id"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_id_container"
+            , "size": 50
+            , "minLength": 1
+            , "dbComment": "Container group id for multiple tasks"
+            , "entName": "ContainerId"
+            , "displayName": "Container Id"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_id_record"
+            , "size": 20
+            , "minLength": 1
+            , "dbComment": "Record id for multiple tasks grouping"
+            , "entName": "RecordId"
+            , "displayName": "Record Id"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_name"
+            , "size": 500
+            , "minLength": 1
+            , "dbComment": "Name of the task, meaning the task itself"
+            , "entName": "Name"
+            , "displayName": "Name"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_notes"
+            , "size": 4000
+            , "minLength": 0
+            , "allowNull": true
+            , "dbComment": "Notes for the task, details"
+            , "entName": "Notes"
+            , "displayName": "Notes"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_parent"
+            , "size": 32
+            , "minLength": 32
+            , "allowNull": true
+            , "dbComment": "Parent task of this subtask"
+            , "entName": "Parent"
+            , "displayName": "Parent"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_order"
+            , "dbComment": "Order used to be displayed in list"
+            , "entName": "Order"
+            , "displayName": "Order"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_date_done"
+            , "dbComment": "Date when the task is marked as done"
+            , "entName": "DoneDate"
+            , "captureRequired": true
+            , "displayName": "Date of Termination"
+        },{
+            "templateId": "long"
+            , "dbName": "tsk_total_time_spent"
+            , "dbComment": "Total time spent attending this task"
+            , "entName": "TotalTimeSpent"
+            , "displayName": "Total Time Spent"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_in_progress"
+            , "dbComment": "Indicates if this task is currently being attended or not"
+            , "entName": "InProgress"
+            , "displayName": "In Progress"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_qualifiers"
+            , "size": 100
+            , "allowNull": true
+            , "dbComment": "Qualifiers used to enhance this task"
+            , "entName": "Qualifiers"
+            , "displayName": "Qualifiers"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_tags"
+            , "size": 200
+            , "allowNull": true
+            , "dbComment": "Tags used to group tasks"
+            , "entName": "Tags"
+            , "displayName": "Tags"
+        },{
+            "templateId": "long"
+            , "dbName": "tsk_estimated_duration"
+            , "dbComment": "Total time estimated to be taken attending this task"
+            , "entName": "EstimatedDuration"
+            , "displayName": "Estimated Duration"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_schedule_date_start"
+            , "dbComment": "Schedule date and time for the task to be attended"
+            , "entName": "ScheduleDateStart"
+            , "displayName": "Schedule Date Start"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_schedule_date_end"
+            , "dbComment": "Schedule date and time for the task to be finished"
+            , "entName": "ScheduleDateEnd"
+            , "displayName": "Schedule Date End"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_date_view_until"
+            , "dbComment": "Date and time until this task must be shown, until then it should be hidden"
+            , "entName": "DateUntilView"
+            , "displayName": "Date Until View"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_id_user_added"
+            , "dbComment": "User who created this task"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_id_user_asigned"
+            , "dbComment": "User who has been asigned to attend this task"
+            , "entName": "UserAsigned"
+            , "displayName": "User Asigned"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        }
+    ]
+    , "view": [
+    ]
+}
