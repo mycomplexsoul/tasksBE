@@ -16,17 +16,23 @@ let ConnectionService = (function(){
                 }
             });
         };
+        let getData = (sql,method) => {
+            connection.query(sql,(err,rows,fields) => {
+                method(err,rows,fields);
+            });
+        };
         let close = () => {
             connection.end();
-        }
+        };
         return {
             executeSql
+            , getData
             , close
         };
     };
 
     return {
         getConnection
-    }
+    };
 })();
 module.exports = ConnectionService;

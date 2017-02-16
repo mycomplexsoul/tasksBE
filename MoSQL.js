@@ -91,11 +91,11 @@ var MoSQL = (function(MoGen){
         if (!format){
             format = "yyyy-MM-dd";
         }
-        if (!date instanceof Date){
-            date = new Date(date);
-        }
         if (date === null){
             return null;
+        }
+        if (!(date instanceof Date)){
+            date = new Date(date);
         }
         let day = date.getDate();
         let month = date.getMonth();
@@ -116,6 +116,28 @@ var MoSQL = (function(MoGen){
     /**
      * Returns an object with expanded metadata from templates and user definitions.
      * Capable of CRUD operations and value storing.
+     * At the end, this returns an object with these capabilities
+     * .fields
+     * .permissions
+     * .model
+     * .db
+     * .fields[n].value
+     * .tableName
+     * .viewName
+     * .plainDBValues
+     * -- Methods
+     * .createSQL()
+     * .createPK()
+     * .createViewSQL()
+     * .toInsertSQL()
+     * .toUpdateSQL(changes)
+     * .toDeleteSQL()
+     * .getPK()
+     * .getValueFormattedForSQL(fieldName,dbType,value)
+     * .getMetadataByEntityName(name)
+     * .getMetadataByDatabaseName(dbName)
+     * .setAll(data)
+     * .setDBAll(data)
      */
     function createModel(entityName) {
         // entityName = "Catalog"
@@ -190,6 +212,7 @@ var MoSQL = (function(MoGen){
             }
 
             // getter/setter
+            t.plainDBValues = {};
             t.model[n.entName] = function (value) {
                 if (value !== undefined){
                     n.value = value;
@@ -320,18 +343,31 @@ var MoSQL = (function(MoGen){
         };
 
         // update
-        t.toUpdateSQL = function (changes) {
+        t.toUpdateSQL = function (changes) { // changes is either an Array of changes or an Object with same PK and different values on members
             var x = this;
             var sql = "", sqlChanges = "";
             var pkFields = x.getPK();
             var n;
             // iterate changes: entName, entNameOrig, value
-            changes.forEach(function(ch){
-                if (ch.value !== x.model[ch.entName]()){ // change value diff from current
-                    n = x.getMetadataByEntityName(ch.entName);
-                    sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value); 
-                }
-            });
+            if (Array.isArray(changes)){
+                changes.forEach(function(ch){
+                    if (ch.value !== x.model[ch.entName]()){ // change value diff from current
+                        n = x.getMetadataByEntityName(ch.entName);
+                        sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value); 
+                    }
+                });
+            }
+            if (changes !== null && typeof changes === "object"){
+                // other object with different values on some members
+                Object.keys(x.db).forEach(dbName => {
+                    n = x.getMetadataByDatabaseName(dbName);
+                    if (!n.isPK && changes.db[dbName]()){
+                        if (changes.db[dbName]() !== x.db[dbName]()){ // change value diff from current
+                            sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
+                        }
+                    }
+                });
+            }
 
             // iterate PKs
             pkFields.forEach(function(f) {
@@ -403,7 +439,16 @@ var MoSQL = (function(MoGen){
                 return e.entName === name;
             });
             return found[0];
-        }
+        };
+        
+        // get field metadata by dbName
+        t.getMetadataByDatabaseName = function(dbName){
+            let x = this;
+            let found = x.fields.filter((e) => {
+                return e.dbName === dbName;
+            });
+            return found[0];
+        };
 
         // constructor
         t.setAll = function(data){
@@ -411,7 +456,14 @@ var MoSQL = (function(MoGen){
                 t.model[k](data[k]);
             });
             return t;
-        }
+        };
+        
+        t.setDBAll = function(data){
+            Object.keys(t.db).forEach(k => {
+                t.db[k](data[k]);
+            });
+            return t;
+        };
 
         return t;
     }

@@ -6,13 +6,29 @@ var MoInstall = require("./MoInstall.js");
 var ConnectionService = require("./ConnectionService.js");
 var mysql = require('mysql');
 var qs = require('querystring');
+var taskAPI = require('./taskAPI.js');
+
+var utils = {
+    parseUrlOnly: (url) => {
+        let parsed = url;
+        if (url.indexOf('?') !== -1){
+            parsed = url.substr(0,url.indexOf('?'));
+        }
+        return parsed;
+    }
+}
 
 http.createServer(function (request, response) {
+
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
 
    // Send the HTTP header
    // HTTP Status: 200 : OK
    // Content Type: text/plain
-   response.writeHead(200, {'Content-Type': 'text/plain'});
+//    response.writeHead(200, {'Content-Type': 'text/plain'});
+//    response.writeHead(200, {'Content-Type': 'application/json'});
+   response.setHeader('Content-Type', 'application/json');
 
    // Send the response body as "Hello World"
    //response.end('Hello World\n');
@@ -21,6 +37,28 @@ http.createServer(function (request, response) {
    if (query.action === "install"){
        let connection = ConnectionService.getConnection(mysql);
        MoInstall.install(connection);
+   }
+   
+   if (query.action === "get" && query.entity === "task"){
+       let connection = ConnectionService.getConnection(mysql);
+       let sql = "select * from task";
+       let data = [];
+       connection.getData(sql,(err,rows,fields) => {
+        //    response.setHeader('Content-Type', 'application/json');
+           if (!err){
+               data = rows;
+           }
+           response.end(JSON.stringify(data));
+       });
+       connection.close();
+   }
+
+   var route = utils.parseUrlOnly(request.url);
+   switch(route){
+       case '/task/list': {
+        taskAPI.list({request,response,mysql,ConnectionService});
+        break;
+       }
    }
 
     var body = '', post;
@@ -40,19 +78,36 @@ http.createServer(function (request, response) {
 
             if (query.entity === "task" && query.action === "create"){
                 let t = MoSQL.createModel("Task");
-                if (post.name !== ''){
+                if (post.tsk_name !== ''){
                     let connection = ConnectionService.getConnection(mysql);
-                    t.db.tsk_id(post.id);
-                    t.db.tsk_id_container(post.container);
-                    t.db.tsk_id_record(post.record);
-                    t.db.tsk_name(post.name);
-                    t.db.tsk_order(1);
-                    t.db.tsk_date_creation(new Date());
-                    t.db.tsk_date_mod(new Date());
+                    
+                    t.setDBAll(post);
 
                     console.log('insert task',t.toInsertSQL());
                     connection.executeSql(t.toInsertSQL(),t.toInsertSQL());
                     connection.close();
+                    response.end(JSON.stringify({operationOK: true, message: 'Task created correctly.'}));
+                }
+            }
+            
+            if (query.entity === "task" && query.action === "update"){
+                let t = MoSQL.createModel("Task");
+                let taskWithChanges = MoSQL.createModel("Task");
+                if (post.tsk_name !== ''){
+                    let connection = ConnectionService.getConnection(mysql);
+                    
+                    connection.getData(`select * from task where tsk_id = '${post.tsk_id}'`,(err,rows,fields) => {
+                        if (!err && rows.length > 0){
+                            t.setDBAll(rows[0]); // original task from DB
+                        }
+                        taskWithChanges.setDBAll(post);
+                        let sql = t.toUpdateSQL(taskWithChanges);
+
+                        console.log('update task',sql);
+                        connection.executeSql(sql,sql);
+                        connection.close();
+                        response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly.'}));
+                    });
                 }
             }
         });
@@ -76,7 +131,9 @@ http.createServer(function (request, response) {
 //        }
 //    }
 //    if (query.action === "generation"){
-       response.end('excecuting generation\n');
+      if (response._headers["content-type"] !== "application/json"){
+        response.end('excecuting generation\n');
+      }
     //    console.log(t.createSQL());
     //    console.log(t.createPK());
     //    console.log(t.createViewSQL());
