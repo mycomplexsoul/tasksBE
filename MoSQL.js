@@ -322,12 +322,15 @@ var MoSQL = (function(MoGen){
         t.toInsertSQL = function () {
             var x = this;
             var sql = "", headers = "";
+            var dateValue = null;
 
             x.fields.filter(function(f){
                 return f.isTableField;
             }).forEach(function(f) {
                 headers = MoGen.concat(headers,",") + f.dbName;
-                if (["integer","long","double"].indexOf(f.dbType) !== -1){
+                if (f.value === null){
+                    sql = MoGen.concat(sql,",") + `null`;
+                } else if (["integer","long","double"].indexOf(f.dbType) !== -1){
                     sql = MoGen.concat(sql,",") + f.value;
                 } else if (f.dbType === "date"){
                     sql = MoGen.concat(sql,",") + `'${formatDate(f.value)}'`;

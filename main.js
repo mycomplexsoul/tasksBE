@@ -76,38 +76,15 @@ http.createServer(function (request, response) {
         request.on('end', function () {
             post = qs.parse(body);
 
-            if (query.entity === "task" && query.action === "create"){
-                let t = MoSQL.createModel("Task");
-                if (post.tsk_name !== ''){
-                    let connection = ConnectionService.getConnection(mysql);
-                    
-                    t.setDBAll(post);
-
-                    console.log('insert task',t.toInsertSQL());
-                    connection.executeSql(t.toInsertSQL(),t.toInsertSQL());
-                    connection.close();
-                    response.end(JSON.stringify({operationOK: true, message: 'Task created correctly.'}));
+            switch(route){
+                case '/task/create': {
+                    taskAPI.create({request,response,mysql,ConnectionService,post});
+                    break;
                 }
-            }
-            
-            if (query.entity === "task" && query.action === "update"){
-                let t = MoSQL.createModel("Task");
-                let taskWithChanges = MoSQL.createModel("Task");
-                if (post.tsk_name !== ''){
-                    let connection = ConnectionService.getConnection(mysql);
-                    
-                    connection.getData(`select * from task where tsk_id = '${post.tsk_id}'`,(err,rows,fields) => {
-                        if (!err && rows.length > 0){
-                            t.setDBAll(rows[0]); // original task from DB
-                        }
-                        taskWithChanges.setDBAll(post);
-                        let sql = t.toUpdateSQL(taskWithChanges);
 
-                        console.log('update task',sql);
-                        connection.executeSql(sql,sql);
-                        connection.close();
-                        response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly.'}));
-                    });
+                case '/task/update': {
+                    taskAPI.update({request,response,mysql,ConnectionService,post});
+                    break;
                 }
             }
         });

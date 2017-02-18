@@ -30,7 +30,7 @@
         , "orderOnImport": 0
     },{
         "templateId": "creationDate"
-        , "dbName": "_date_creation"
+        , "dbName": "_date_add"
         , "dbType": "datetime"
         , "dbComment": "Creation date of record in table"
         , "entName": "CreationDate"

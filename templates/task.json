@@ -135,13 +135,15 @@
             , "entName": "DateUntilView"
             , "displayName": "Date Until View"
         },{
-            "templateId": "integer"
+            "templateId": "string"
             , "dbName": "tsk_id_user_added"
+            , "size": 50
             , "dbComment": "User who created this task"
             , "entName": "User"
             , "displayName": "User"
         },{
-            "templateId": "integer"
+            "templateId": "string"
+            , "size": 50
             , "dbName": "tsk_id_user_asigned"
             , "dbComment": "User who has been asigned to attend this task"
             , "entName": "UserAsigned"
