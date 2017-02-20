@@ -9,11 +9,12 @@ let ConnectionService = (function(){
         });
         
         connection.connect();
-        let executeSql = (sql,message) => {
+        let executeSql = (sql,method) => {
             connection.query(sql,(err,rows,fields) => {
-                if(err){
-                    console.log(message);
+                if (err){
+                    console.log(err);
                 }
+                method(err,rows,fields);
             });
         };
         let getData = (sql,method) => {

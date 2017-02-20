@@ -1,8 +1,8 @@
 "use strict";
-var MoSQL = require("./MoSQL.js");
+let MoSQL = require("./MoSQL.js");
 
-var taskAPI = (function(MoSQL){
-    var list = function(node) {
+let taskAPI = (function(MoSQL){
+    let list = function(node) {
         let connection = node.ConnectionService.getConnection(node.mysql);
         let sql = "select * from task";
         let data = [];
@@ -15,7 +15,7 @@ var taskAPI = (function(MoSQL){
         });
     };
 
-    var create = function(node) {
+    let create = function(node) {
         let sql = "";
         let t = MoSQL.createModel("Task");
         if (node.post.tsk_name !== ''){
@@ -24,13 +24,18 @@ var taskAPI = (function(MoSQL){
             t.setDBAll(node.post);
             sql = t.toInsertSQL();
             console.log('insert task',sql);
-            connection.executeSql(sql,sql);
-            connection.close();
-            node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly.'}));
+            connection.executeSql(sql,(err,rows,fields) => {
+                connection.close();
+                if (err){
+                    node.response.end(JSON.stringify({operationOK: false, message: 'Error on task creation.'}));
+                } else {
+                    node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly.'}));
+                }
+            });
         }
     }
 
-    var update = function(node) {
+    let update = function(node) {
         let t = MoSQL.createModel("Task");
         let taskWithChanges = MoSQL.createModel("Task");
         if (node.post.tsk_name !== ''){
@@ -44,11 +49,41 @@ var taskAPI = (function(MoSQL){
                 let sql = t.toUpdateSQL(taskWithChanges);
 
                 console.log('update task',sql);
-                connection.executeSql(sql,sql);
-                connection.close();
-                node.response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly.'}));
+                connection.executeSql(sql,(err,rows,fields) => {
+                    connection.close();
+                    if (err){
+                        node.response.end(JSON.stringify({operationOK: false, message: 'Error on task modification.'}));
+                    } else {
+                        node.response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly.'}));
+                    }
+                });
             });
         }
+    }
+
+    let batchCreate = function(node) {
+        let sql = "";
+        let t = MoSQL.createModel("Task");
+        let connection, insertionsOk = 0, insertionsError = 0;
+        if (node.post.length){
+            connection = node.ConnectionService.getConnection(node.mysql);
+        }
+        node.post.forEach((p) => {
+            if (p.tsk_name !== ''){
+                t.setDBAll(p);
+                sql = t.toInsertSQL();
+                console.log('insert task',sql);
+                connection.executeSql(sql,(err,rows,fields) => {
+                    if (err){
+                        insertionsError += 1;
+                    } else {
+                        insertionsOk += 1;
+                    }
+                });
+            }
+        });
+        connection.close();
+        node.response.end(JSON.stringify({operationOK: true, message: `Batch created finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}`}));
     }
 
     return {

@@ -4,15 +4,26 @@ var MoInstall = (function(MoSQL){
     let install = (connection) => {
         let models = ['Catalog','Task'];
         let e;
+        let method = function(msgOk){
+            return function(err){
+                if (err){
+                    console.log(err);
+                } else {
+                    if (msgOk){
+                        console.log(msgOk);
+                    }
+                }
+            };
+        };
 
         models.forEach((model) => {
             e = MoSQL.createModel(model);
 
-            connection.executeSql(`drop view if exists ${e.viewName}`,`view ${e.viewName} droped`);
-            connection.executeSql(`drop table if exists ${e.tableName}`,`table ${e.tableName} droped`);
-            connection.executeSql(e.createSQL(),`table ${e.tableName} created`);
-            connection.executeSql(e.createPK(),`PK created`);
-            connection.executeSql(e.createViewSQL(),`view ${e.viewName} created`);
+            connection.executeSql(`drop view if exists ${e.viewName}`,method(`view ${e.viewName} droped`));
+            connection.executeSql(`drop table if exists ${e.tableName}`,method(`table ${e.tableName} droped`));
+            connection.executeSql(e.createSQL(),method(`table ${e.tableName} created`));
+            connection.executeSql(e.createPK(),method(`PK created`));
+            connection.executeSql(e.createViewSQL(),method(`view ${e.viewName} created`));
         });
 
         populateInitialData(connection);
@@ -49,7 +60,11 @@ var MoInstall = (function(MoSQL){
         addCatalog('RECORD_STATUS',2,'CANCELLED','THE RECORD IS CANCELLED AND IT CAN NOT BE USED BY THE APPLICATION',8,new Date(),new Date(),1);
 
         inserts.forEach(i => {
-            connection.executeSql(i,'error');
+            connection.executeSql(i,(err) => {
+                if (err){
+                    console.log(err);
+                }
+            });
         });
         console.log('Catalog: inserted ' + inserts.length);
 

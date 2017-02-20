@@ -37,6 +37,7 @@ http.createServer(function (request, response) {
    if (query.action === "install"){
        let connection = ConnectionService.getConnection(mysql);
        MoInstall.install(connection);
+       response.end(JSON.stringify({operationOK: true, message: "installation ok"}));
    }
    
    if (query.action === "get" && query.entity === "task"){
