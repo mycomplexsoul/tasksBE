@@ -1,18 +1,29 @@
 "use strict";
 let ConnectionService = (function(){
+    function loadJSON(file){
+        let fs = require('fs');
+        let obj = JSON.parse(fs.readFileSync(file + '.json', 'utf8'));
+        return obj;
+    }
     let getConnection = (mysql) => {
-        let connection = mysql.createConnection({
-            host     : 'localhost',
-            user     : 'root',
-            password : '_Yadira!',
-            database : 'testdb'
-        });
+        let config = loadJSON('cfg');
+        let connection = mysql.createConnection(config[0]);
         
-        connection.connect();
+        connection.connect(function(err) {
+            if (err) {
+                console.error('error connecting: ' + err.stack);
+                return;
+            }
+
+            console.log('connected as id ' + connection.threadId);
+        });
         let executeSql = (sql,method) => {
             connection.query(sql,(err,rows,fields) => {
                 if (err){
                     console.log(err);
+                }
+                if(!fields){
+                    console.log(rows.message);
                 }
                 method(err,rows,fields);
             });

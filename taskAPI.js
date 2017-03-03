@@ -45,7 +45,7 @@ let taskAPI = (function(MoSQL){
                 if (!err && rows.length > 0){
                     t.setDBAll(rows[0]); // original task from DB
                 }
-                taskWithChanges.setDBAll(post);
+                taskWithChanges.setDBAll(node.post);
                 let sql = t.toUpdateSQL(taskWithChanges);
 
                 console.log('update task',sql);

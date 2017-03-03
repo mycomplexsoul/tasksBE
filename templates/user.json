@@ -1,0 +1,153 @@
+{
+    "name": "User"
+    , "namespace": "common"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": false
+    , "prefix": "usr"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "AUTONUMERIC"
+        , "HEADERS(User,Users)"
+        , "TABLE_NAME(USER)"
+        , "VIEW_NAME(VIUSER)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "usr_id"
+            , "isPK": true
+            , "size": 64
+            , "minLength": 1
+            , "dbComment": "Id for the user, used for login"
+            , "entName": "UserId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "User Id"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_pwd"
+            , "size": 100
+            , "dbComment": "Password"
+            , "entName": "Password"
+            , "displayName": "Password"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_first_name"
+            , "size": 100
+            , "minLength": 1
+            , "dbComment": "First name of the user"
+            , "entName": "FirstName"
+            , "displayName": "First Name"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_middle_name"
+            , "size": 100
+            , "minLength": 1
+            , "dbComment": "Middle name of the user"
+            , "entName": "MiddleName"
+            , "displayName": "Middle Name"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_last_name"
+            , "size": 100
+            , "minLength": 0
+            , "allowNull": true
+            , "dbComment": "Last name of the user"
+            , "entName": "LastName"
+            , "displayName": "Last Name"
+        },{
+            "templateId": "integer"
+            , "dbName": "usr_ctg_user_type"
+            , "dbComment": "Type of user, classification or group"
+            , "entName": "UserType"
+            , "captureRequired": true
+            , "displayName": "User Type"
+            , "catalogId": "USER_TYPES"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_email"
+            , "size": 100
+            , "minLength": 1
+            , "dbComment": "Email of the user"
+            , "entName": "Email"
+            , "displayName": "Email"
+        },{
+            "templateId": "integer"
+            , "dbName": "usr_ctg_connected"
+            , "dbComment": "Indicates if the user is connected or not"
+            , "entName": "IsConnected"
+            , "displayName": "Is Connected"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "integer"
+            , "dbName": "usr_login_attempts"
+            , "dbComment": "Number of consecutive failed attemps to login"
+            , "entName": "LoginAttempts"
+            , "displayName": "Consecutive Failed Attemps to Login"
+        },{
+            "templateId": "datetime"
+            , "dbName": "usr_date_last_login_attempt"
+            , "allowNull": true
+            , "dbComment": "Date and time of the last login attempt"
+            , "entName": "DateLastLoginAttempt"
+            , "displayName": "Date of Last Login Attempt"
+        },{
+            "templateId": "datetime"
+            , "dbName": "usr_date_pwd_change"
+            , "allowNull": true
+            , "dbComment": "Date and time of the last password change"
+            , "entName": "DatePwdChange"
+            , "displayName": "Date of Last Password Change"
+        },{
+            "templateId": "integer"
+            , "dbName": "usr_ctg_pwd_temporal"
+            , "dbComment": "Indicates if the password should be changed, considered temporal"
+            , "entName": "IsPasswordTemporal"
+            , "displayName": "Password is Temporal"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "integer"
+            , "dbName": "usr_ctg_blocked"
+            , "dbComment": "Indicates if the user is blocked and not allowed to login"
+            , "entName": "IsBlocked"
+            , "displayName": "User is Blocked"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "string"
+            , "dbName": "usr_config"
+            , "size": 4000
+            , "minLength": 0
+            , "allowNull": true
+            , "dbComment": "Particular configuration for the user"
+            , "entName": "Configuration"
+            , "displayName": "Configuration"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_user_type"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_connected"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_pwd_temporal"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_blocked"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+    ]
+}

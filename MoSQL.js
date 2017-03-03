@@ -301,7 +301,7 @@ var MoSQL = (function(MoGen){
                 } else {
                     if (f.originTable === "CATALOG"){
                         if (x.tableName !== "catalog"){
-                            fields = MoGen.concat(fields,", ") + `(select ctg_name from catalog where ctg_id = '${f.catalogId}' and ctg_sequential = ctg${f.linkedField}) as ${f.dbName}`;
+                            fields = MoGen.concat(fields,", ") + `(select ctg_name from catalog where ctg_id = '${f.catalogId}' and ctg_sequential = ${f.linkedField}) as ${f.dbName}`;
                         } else {
                             fields = MoGen.concat(fields,", ") + `(select catalog2.ctg_name from catalog catalog2 where ctg_id = '${f.catalogId}' and catalog2.ctg_sequential = catalog.${f.linkedField}) as ${f.dbName}`;
                         } 

@@ -2,7 +2,7 @@
 var MoSQL = require("./MoSQL");
 var MoInstall = (function(MoSQL){
     let install = (connection) => {
-        let models = ['Catalog','Task'];
+        let models = ['Catalog','Task','User'];
         let e;
         let method = function(msgOk){
             return function(err){
@@ -46,6 +46,8 @@ var MoInstall = (function(MoSQL){
         addCatalog("CATALOGS",1,"LIST OF ALL CATALOGS","A LIST OF ALL CATALOGS, EACH CATALOG SHOULD BE LISTED HERE FOR PERMISSION CONFIGURATION",1,new Date(),new Date(),1);
         addCatalog("CATALOGS",2,"CATALOG_PERMISSIONS","PERMISSIONS ON CATALOG AND PERMISSIONS ON RECORD",4,new Date(),new Date(),1);
         addCatalog('CATALOGS',3,'RECORD_STATUS','STATUS FOR RECORD ITEM',4,new Date(),new Date(),1);
+        addCatalog('CATALOGS',4,'BOOLEAN','A YES/NO PARSE',4,new Date(),new Date(),1);
+        addCatalog('CATALOGS',5,'USER_TYPES','USER TYPES FOR USER CLASSIFICATION',4,new Date(),new Date(),1);
         
         addCatalog("CATALOG_PERMISSIONS",1,"ADD AND EDIT RECORDS","USERS CAN ADD RECORDS AND CAN EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
         addCatalog("CATALOG_PERMISSIONS",2,"ADD AND NOT EDIT RECORDS","USERS CAN ADD RECORDS AND CAN NOT EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
@@ -59,6 +61,12 @@ var MoInstall = (function(MoSQL){
         addCatalog('RECORD_STATUS',1,'ACTIVE','THE RECORD IS ACTIVE AND CAN BE USED IN THE APPLICATION',8,new Date(),new Date(),1);
         addCatalog('RECORD_STATUS',2,'CANCELLED','THE RECORD IS CANCELLED AND IT CAN NOT BE USED BY THE APPLICATION',8,new Date(),new Date(),1);
 
+        addCatalog('BOOLEAN',1,'NO','NO, MEANING IT DOES NOT APPLY THE PROPERTY OR DESCRIPTION',8,new Date(),new Date(),1);
+        addCatalog('BOOLEAN',2,'YES','YES, MEANING IT APPLIES THE DESCRIPTION RELATED',8,new Date(),new Date(),1);
+        
+        addCatalog('USER_TYPES',1,'END USER','THE END USER OF THE APPLICATION',8,new Date(),new Date(),1);
+        addCatalog('USER_TYPES',2,'ADMINISTRATOR','AN ADMINISTRATOR OF THE APPLICATION',8,new Date(),new Date(),1);
+
         inserts.forEach(i => {
             connection.executeSql(i,(err) => {
                 if (err){
@@ -67,6 +75,26 @@ var MoInstall = (function(MoSQL){
             });
         });
         console.log('Catalog: inserted ' + inserts.length);
+        inserts = [];
+
+        /* User */
+        t = MoSQL.createModel("User");
+        let addUser = (UserId,Password,FirstName,MiddleName,LastName,UserType,Email,IsConnected,LoginAttempts,DateLastLoginAttempt,DatePwdChange,IsPasswordTemporal,IsBlocked,Configuration,CreationDate,ModDate,Status) => {
+            inserts.push(t.setAll({UserId,Password,FirstName,MiddleName,LastName,UserType,Email,IsConnected,LoginAttempts,DateLastLoginAttempt,DatePwdChange,IsPasswordTemporal,IsBlocked,Configuration,CreationDate,ModDate,Status}).toInsertSQL());
+        };
+
+        addUser('dummy','dummypwd','Dummy','D.','Doe',1,'dummy@dummy.com',1,0,null,null,1,1,null,new Date(),new Date(),1);
+        addUser('admin','admin','Admin','-','-',2,'admin@domain.com',1,0,null,null,1,1,null,new Date(),new Date(),1);
+        addUser('mycomplexsoul','*','Daniel','-','-',2,'mycomplexsoul@gmail.com',1,0,null,null,1,1,null,new Date(),new Date(),1);
+        
+        inserts.forEach(i => {
+            connection.executeSql(i,(err) => {
+                if (err){
+                    console.log(err);
+                }
+            });
+        });
+        console.log('User: inserted ' + inserts.length);
 
         console.log('populate initial data end');
     };

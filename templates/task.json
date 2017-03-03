@@ -8,7 +8,7 @@
     , "permissionsTemplate": "permissions_all"
     , "specialFeatures": [
         "AUTONUMERIC"
-        , "HEADERS"
+        , "HEADERS(Task,Tasks)"
         , "TABLE_NAME(TASK)"
         , "VIEW_NAME(VITASK)"
     ]
@@ -155,6 +155,12 @@
         },{
             "templateId": "status"
             , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_in_progress"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
         }
     ]
     , "view": [
