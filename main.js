@@ -101,6 +101,11 @@ http.createServer(function (request, response) {
                     taskAPI.update({request,response,mysql,ConnectionService,post});
                     break;
                 }
+
+                case '/task/batch': {
+                    taskAPI.batch({request,response,mysql,ConnectionService,post});
+                    break;
+                }
             }
         });
     }

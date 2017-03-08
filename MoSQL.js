@@ -113,6 +113,19 @@ var MoSQL = (function(MoGen){
             ;
         return str;
     }
+
+    function escapeRegExp(str){
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    }
+
+    function replaceAll(str, find, replace){
+        return (str + '').replace(new RegExp(escapeRegExp(find), "g"), replace);
+    }
+
+    function parseSimpleQuoteForSQL(str){
+        return replaceAll(str,"'","''");
+    }
+
     /**
      * Returns an object with expanded metadata from templates and user definitions.
      * Capable of CRUD operations and value storing.
@@ -337,7 +350,7 @@ var MoSQL = (function(MoGen){
                 } else if (f.dbType === "datetime"){
                     sql = MoGen.concat(sql,",") + `'${formatDate(f.value,"yyyy-MM-dd HH:mm:ss")}'`;
                 } else {
-                    sql = MoGen.concat(sql,",") + `'${f.value}'`;
+                    sql = MoGen.concat(sql,",") + `'${parseSimpleQuoteForSQL(f.value)}'`;
                 }
             });
 
@@ -381,7 +394,7 @@ var MoSQL = (function(MoGen){
                 } else if (f.dbType === "datetime"){
                     sql = MoGen.concat(sql,",") + `${f.dbName} = '${formatDate(f.value,"yyyy-MM-dd HH:mm:ss")}'`;
                 } else {
-                    sql = MoGen.concat(sql,",") + `${f.dbName} = '${f.value}'`;
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '${parseSimpleQuoteForSQL(f.value)}'`;
                 }
             });
 
@@ -430,7 +443,7 @@ var MoSQL = (function(MoGen){
             } else if (dbType === "datetime"){
                 sql = MoGen.concat(sql,",") + `'${formatDate(value,"yyyy-MM-dd HH:mm:ss")}'`;
             } else {
-                sql = MoGen.concat(sql,",") + `'${value}'`;
+                sql = MoGen.concat(sql,",") + `'${parseSimpleQuoteForSQL(value)}'`;
             }
             return sql;
         }

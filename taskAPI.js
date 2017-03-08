@@ -61,10 +61,12 @@ let taskAPI = (function(MoSQL){
         }
     }
 
-    let batchCreate = function(node) {
+    let batch = function(node) {
         let sql = "";
         let t = MoSQL.createModel("Task");
         let connection, insertionsOk = 0, insertionsError = 0;
+        let q = [];
+
         if (node.post.length){
             connection = node.ConnectionService.getConnection(node.mysql);
         }
@@ -73,23 +75,31 @@ let taskAPI = (function(MoSQL){
                 t.setDBAll(p);
                 sql = t.toInsertSQL();
                 console.log('insert task',sql);
-                connection.executeSql(sql,(err,rows,fields) => {
-                    if (err){
-                        insertionsError += 1;
-                    } else {
-                        insertionsOk += 1;
-                    }
-                });
+                q.push(new Promise((resolve,reject) => {
+                    connection.executeSql(sql,(err,rows,fields) => {
+                        if (err){
+                            insertionsError += 1;
+                            reject(err);
+                        } else {
+                            insertionsOk += 1;
+                            resolve(insertionsOk);
+                        }
+                    });
+                }));
             }
         });
-        connection.close();
-        node.response.end(JSON.stringify({operationOK: true, message: `Batch created finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}`}));
+        // Wait for all queries to finish before answering the request
+        Promise.all(q).then(values => {
+            connection.close();
+            node.response.end(JSON.stringify({operationOK: true, message: `Batch finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}`}));
+        });
     }
 
     return {
         list
         , create
         , update
+        , batch
     };
 })(MoSQL);
 module.exports = taskAPI;

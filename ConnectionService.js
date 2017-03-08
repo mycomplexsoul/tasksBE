@@ -18,11 +18,11 @@ let ConnectionService = (function(){
             console.log('connected as id ' + connection.threadId);
         });
         let executeSql = (sql,method) => {
-            connection.query(sql,(err,rows,fields) => {
+            return connection.query(sql,(err,rows,fields) => {
                 if (err){
                     console.log(err);
                 }
-                if(!fields){
+                if(!fields && rows.message){
                     console.log(rows.message);
                 }
                 method(err,rows,fields);
