@@ -104,6 +104,14 @@
         , "dbType": "string"
         , "formControl": "Textbox"
     },{
+        "templateId": "user"
+        , "dbType": "string"
+        , "size": 50
+        , "dbComment": "User related to this record"
+        , "entName": "User"
+        , "displayName": "User"
+        , "formControl": "Combobox"
+    },{
         "templateId": "clob"
     },{
         "templateId": "blob"

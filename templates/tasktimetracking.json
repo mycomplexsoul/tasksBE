@@ -1,0 +1,62 @@
+{
+    "name": "TaskTimeTracking"
+    , "namespace": "common"
+    , "removeMeans": "DELETION"
+    , "authNeeded": false
+    , "displayOnMenu": false
+    , "prefix": "tsh"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "AUTONUMERIC"
+        , "HEADERS(Task Time Tracking,Tasks Time Tracking)"
+        , "TABLE_NAME(TASKTIMETRACKING)"
+        , "VIEW_NAME(VITASKTIMETRACKING)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "tsh_id"
+            , "isPK": true
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Id for the task"
+            , "entName": "TaskId"
+            , "captureRequired": true
+            , "displayName": "Task Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsh_num_secuential"
+            , "isPK": true
+            , "dbComment": "Secuential assigned, ordering the time tracking records precedence in time for the task"
+            , "specialRules": [
+                "DUPLICITY_ADD(tsh_id)"
+            ]
+            , "entName": "Secuential"
+            , "displayName": "Secuential"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsh_date_start"
+            , "dbComment": "Date where the tracking started, indicating beginning of task attendance"
+            , "entName": "StartDate"
+            , "captureRequired": true
+            , "displayName": "Start Date"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsh_date_end"
+            , "dbComment": "Date where the tracking ended, indicating stop of task attendance"
+            , "entName": "EndDate"
+            , "captureRequired": true
+            , "displayName": "End Date"
+        },{
+            "templateId": "user"
+            , "dbName": "tsh_id_user"
+            , "dbComment": "User who attended this task time entry"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        }
+    ]
+    , "view": [
+    ]
+}

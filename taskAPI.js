@@ -24,12 +24,13 @@ let taskAPI = (function(MoSQL){
             t.setDBAll(node.post);
             sql = t.toInsertSQL();
             console.log('insert task',sql);
+            let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
             connection.executeSql(sql,(err,rows,fields) => {
                 connection.close();
                 if (err){
-                    node.response.end(JSON.stringify({operationOK: false, message: 'Error on task creation.'}));
+                    node.response.end(JSON.stringify({operationOK: false, message: 'Error on task creation. id: ' + strName}));
                 } else {
-                    node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly.'}));
+                    node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly. id: ' + strName}));
                 }
             });
         }
@@ -47,14 +48,15 @@ let taskAPI = (function(MoSQL){
                 }
                 taskWithChanges.setDBAll(node.post);
                 let sql = t.toUpdateSQL(taskWithChanges);
+                let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
 
                 console.log('update task',sql);
                 connection.executeSql(sql,(err,rows,fields) => {
                     connection.close();
                     if (err){
-                        node.response.end(JSON.stringify({operationOK: false, message: 'Error on task modification.'}));
+                        node.response.end(JSON.stringify({operationOK: false, message: 'Error on task modification. id: ' + strName}));
                     } else {
-                        node.response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly.'}));
+                        node.response.end(JSON.stringify({operationOK: true, message: 'Task updated correctly. id: ' + strName}));
                     }
                 });
             });

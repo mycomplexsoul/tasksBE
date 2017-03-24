@@ -56,6 +56,9 @@ http.createServer(function (request, response) {
 
    var route = utils.parseUrlOnly(request.url);
    switch(route){
+       case '/online': {
+           response.end(JSON.stringify({operationOK: true}));
+       }
        case '/task/list': {
         taskAPI.list({request,response,mysql,ConnectionService});
         break;

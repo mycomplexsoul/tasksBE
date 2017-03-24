@@ -2,7 +2,7 @@
 var MoSQL = require("./MoSQL");
 var MoInstall = (function(MoSQL){
     let install = (connection) => {
-        let models = ['Catalog','Task','User'];
+        let models = ['Catalog','Task','User','TaskTimeTracking'];
         let e;
         let method = function(msgOk){
             return function(err){
