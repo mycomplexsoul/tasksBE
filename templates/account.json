@@ -1,0 +1,87 @@
+{
+    "name": "Account"
+    , "namespace": "Money"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "acc"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Account,Accounts)"
+        , "TABLE_NAME(ACCOUNT)"
+        , "VIEW_NAME(VIACCOUNT)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "acc_id"
+            , "isPK": true
+            , "size": 16
+            , "minLength": 1
+            , "dbComment": "Id for the account"
+            , "entName": "AccountId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Account Id"
+        },{
+            "templateId": "string"
+            , "dbName": "acc_name"
+            , "size": 100
+            , "minLength": 1
+            , "dbComment": "Name for the account, appears on balance"
+            , "entName": "Name"
+            , "displayName": "Name"
+        },{
+            "templateId": "integer"
+            , "dbName": "acc_ctg_type"
+            , "dbComment": "Type of account"
+            , "entName": "AccountType"
+            , "captureRequired": true
+            , "displayName": "Account Type"
+            , "catalogId": "ACCOUNT_TYPES"
+        },{
+            "templateId": "string"
+            , "dbName": "acc_comment"
+            , "size": 200
+            , "minLength": 1
+            , "dbComment": "Comments for the account"
+            , "entName": "Comment"
+            , "displayName": "Comment"
+        },{
+            "templateId": "integer"
+            , "dbName": "acc_check_day"
+            , "dbComment": "Check Day when the balance is fixed for the past month"
+            , "entName": "CheckDay"
+            , "displayName": "Check Day"
+        },{
+            "templateId": "double"
+            , "dbName": "acc_average_min_balance"
+            , "dbComment": "Average minimum balance required for this type of account"
+            , "entName": "AverageMinBalance"
+            , "displayName": "Average Minimum Balance"
+        },{
+            "templateId": "integer"
+            , "dbName": "acc_payment_day"
+            , "dbComment": "Payment day, for credit accounts"
+            , "entName": "PaymentDay"
+            , "displayName": "Payment Day"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_type"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+    ]
+}

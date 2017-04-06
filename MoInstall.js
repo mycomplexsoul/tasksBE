@@ -2,7 +2,7 @@
 var MoSQL = require("./MoSQL");
 var MoInstall = (function(MoSQL){
     let install = (connection) => {
-        let models = ['Catalog','Task','User','TaskTimeTracking'];
+        let models = ['Catalog','Task','User','TaskTimeTracking','Account'];
         let e;
         let method = function(msgOk){
             return function(err){
@@ -48,6 +48,7 @@ var MoInstall = (function(MoSQL){
         addCatalog('CATALOGS',3,'RECORD_STATUS','STATUS FOR RECORD ITEM',4,new Date(),new Date(),1);
         addCatalog('CATALOGS',4,'BOOLEAN','A YES/NO PARSE',4,new Date(),new Date(),1);
         addCatalog('CATALOGS',5,'USER_TYPES','USER TYPES FOR USER CLASSIFICATION',4,new Date(),new Date(),1);
+        addCatalog('CATALOGS',6,'ACCOUNT_TYPES','ACCOUNT TYPES FOR ACCOUNT CLASIFICATION',4,new Date(),new Date(),1);
         
         addCatalog("CATALOG_PERMISSIONS",1,"ADD AND EDIT RECORDS","USERS CAN ADD RECORDS AND CAN EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
         addCatalog("CATALOG_PERMISSIONS",2,"ADD AND NOT EDIT RECORDS","USERS CAN ADD RECORDS AND CAN NOT EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
@@ -67,6 +68,11 @@ var MoInstall = (function(MoSQL){
         addCatalog('USER_TYPES',1,'END USER','THE END USER OF THE APPLICATION',8,new Date(),new Date(),1);
         addCatalog('USER_TYPES',2,'ADMINISTRATOR','AN ADMINISTRATOR OF THE APPLICATION',8,new Date(),new Date(),1);
 
+        addCatalog('ACCOUNT_TYPES',1,'DEBIT','ACCOUNT WITH DEBIT BALANCE ONLY',8,new Date(),new Date(),1);
+        addCatalog('ACCOUNT_TYPES',2,'CREDIT','ACCOUNT WITH CREDIT BALANCE',8,new Date(),new Date(),1);
+        addCatalog('ACCOUNT_TYPES',3,'LOAN','ACCOUNT TO KEEP BALANCE OF A LOAN',8,new Date(),new Date(),1);
+        addCatalog('ACCOUNT_TYPES',4,'OTHER','SPECIAL ACCOUNT',8,new Date(),new Date(),1);
+
         inserts.forEach(i => {
             connection.executeSql(i,(err) => {
                 if (err){
@@ -75,9 +81,9 @@ var MoInstall = (function(MoSQL){
             });
         });
         console.log('Catalog: inserted ' + inserts.length);
-        inserts = [];
 
         /* User */
+        inserts = [];
         t = MoSQL.createModel("User");
         let addUser = (UserId,Password,FirstName,MiddleName,LastName,UserType,Email,IsConnected,LoginAttempts,DateLastLoginAttempt,DatePwdChange,IsPasswordTemporal,IsBlocked,Configuration,CreationDate,ModDate,Status) => {
             inserts.push(t.setAll({UserId,Password,FirstName,MiddleName,LastName,UserType,Email,IsConnected,LoginAttempts,DateLastLoginAttempt,DatePwdChange,IsPasswordTemporal,IsBlocked,Configuration,CreationDate,ModDate,Status}).toInsertSQL());
@@ -95,6 +101,26 @@ var MoInstall = (function(MoSQL){
             });
         });
         console.log('User: inserted ' + inserts.length);
+
+        /* Account */
+        inserts = [];
+        t = MoSQL.createModel("Account");
+        let addAccount = (AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,CreationDate,ModDate,Status) => {
+            inserts.push(t.setAll({AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,CreationDate,ModDate,Status}).toInsertSQL());
+        };
+
+        addAccount('0000000000000001','CAPITAL',4,'Capital Account',1,0,0,new Date(),new Date(),1);
+        
+        inserts.forEach(i => {
+            connection.executeSql(i,(err) => {
+                if (err){
+                    console.log(err);
+                }
+            });
+        });
+        console.log('User: inserted ' + inserts.length);
+
+        /* end data */
 
         console.log('populate initial data end');
     };

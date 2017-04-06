@@ -68,6 +68,9 @@ let taskAPI = (function(MoSQL){
         let t = MoSQL.createModel("Task");
         let connection, insertionsOk = 0, insertionsError = 0;
         let q = [];
+        let h = MoSQL.createModel("TaskTimeTracking");
+        let sqlh = "";
+        let historyInsertionsError = 0, historyInsertionsOk = 0;
 
         if (node.post.length){
             connection = node.ConnectionService.getConnection(node.mysql);
@@ -88,12 +91,30 @@ let taskAPI = (function(MoSQL){
                         }
                     });
                 }));
+                // time tracking history (if present)
+                if (p.tsk_time_history.length > 0){
+                    p.tsk_time_history.forEach(tt => {
+                        h.setDBAll(tt);
+                        sqlh = h.toInsertSQL();
+                        q.push(new Promise((resolve,reject) => {
+                            connection.executeSql(sqlh,(err,rows,fields) => {
+                                if (err){
+                                    historyInsertionsError += 1;
+                                    reject(err);
+                                } else {
+                                    historyInsertionsOk += 1;
+                                    resolve(historyInsertionsOk);
+                                }
+                            });
+                        }));
+                    });
+                }
             }
         });
         // Wait for all queries to finish before answering the request
         Promise.all(q).then(values => {
             connection.close();
-            node.response.end(JSON.stringify({operationOK: true, message: `Batch finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}`}));
+            node.response.end(JSON.stringify({operationOK: true, message: `Batch finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}, history ok: ${historyInsertionsOk}, history errors: ${historyInsertionsError}`}));
         });
     }
 
