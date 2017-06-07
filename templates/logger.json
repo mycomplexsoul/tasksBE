@@ -1,0 +1,62 @@
+{
+    "name": "Logger"
+    , "namespace": "common"
+    , "removeMeans": "DELETION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "log"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Log,Logs)"
+        , "TABLE_NAME(LOGGER)"
+        , "VIEW_NAME(VILOGGER)"
+    ]
+    , "fields": [
+        {
+            "templateId": "long"
+            , "dbName": "log_id"
+            , "isPK": true
+            , "dbComment": "Id for the log"
+            , "entName": "LogId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Log Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "log_id_screen"
+            , "dbComment": "Id for the screen related to the log"
+            , "entName": "ScreenId"
+            , "displayName": "Screen Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "log_id_feature"
+            , "dbComment": "Id for the feature related to the screen"
+            , "entName": "FeatureId"
+            , "displayName": "Feature Id"
+        },{
+            "templateId": "string"
+            , "dbName": "log_text"
+            , "size": 4000
+            , "dbComment": "Text of the log"
+            , "entName": "Text"
+            , "displayName": "Text"
+        },{
+            "templateId": "datetime"
+            , "dbName": "log_date"
+            , "dbComment": "Date of the log"
+            , "entName": "LogDate"
+            , "displayName": "Date"
+        },{
+            "templateId": "string"
+            , "dbName": "log_id_user"
+            , "size": 50
+            , "dbComment": "User who created this log"
+            , "entName": "User"
+            , "displayName": "User"
+        }
+    ]
+    , "view": [
+    ]
+}

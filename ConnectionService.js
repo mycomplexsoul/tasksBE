@@ -20,6 +20,7 @@ let ConnectionService = (function(){
         let executeSql = (sql,method) => {
             return connection.query(sql,(err,rows,fields) => {
                 if (err){
+                    console.log('There was an error with this sql: ' + sql);
                     console.log(err);
                 }
                 if(!fields && rows.message){

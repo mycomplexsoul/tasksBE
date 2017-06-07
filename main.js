@@ -18,7 +18,19 @@ var utils = {
     }
 }
 
+function LogRequest(request,msg){
+    let message = `Received request ${request.method} for url ${request.url} / ${msg}`;
+    let date = new Date();
+    console.log(date.toISOString() + ' - ' + message);
+}
+
+function Log(message){
+    let date = new Date();
+    console.log(date.toISOString() + ' - ' + message);
+}
+
 http.createServer(function (request, response) {
+    LogRequest(request,'start');
 
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
@@ -73,7 +85,10 @@ http.createServer(function (request, response) {
       headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, DELETE, OPTIONS";
       headers["Access-Control-Allow-Credentials"] = false;
       headers["Access-Control-Max-Age"] = '86400'; // 24 hours
-      headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept";
+      //headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept";
+      headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Access-Control-Allow-Headers, Origin, Authorization";
+    //   headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers";
+      //headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type";
       response.writeHead(200, headers);
       response.end();
    }
@@ -82,17 +97,22 @@ http.createServer(function (request, response) {
    if (request.method == 'POST') {
 
         request.on('data', function (data) {
+            Log(`Receiving data for request ${request.method} ${request.url}`);
             body += data;
 
             // Too much POST data, kill the connection!
             // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-            if (body.length > 1e6)
+            // 1e7 === 1 * Math.pow(10, 7) === 1 * 10000000 ~ 10MB
+            if (body.length > 1e7)
                 request.connection.destroy();
         });
 
         request.on('end', function () {
             //post = qs.parse(body);
             post = JSON.parse(body);
+            if (post.tsk_id){
+                Log(`Processing request ${request.method} for ${request.url} for task id: ${post.tsk_id} / ${post.tsk_name}`);
+            }
 
             switch(route){
                 case '/task/create': {
@@ -111,6 +131,23 @@ http.createServer(function (request, response) {
                 }
             }
         });
+
+        /*if (response._headers["content-type"] === "application/json"){
+            var headers = {};
+            // IE8 does not allow domains to be specified, just the *
+            // headers["Access-Control-Allow-Origin"] = req.headers.origin;
+            headers["Access-Control-Allow-Origin"] = "*";
+            headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, DELETE, OPTIONS";
+            headers["Access-Control-Allow-Credentials"] = false;
+            headers["Access-Control-Max-Age"] = '86400'; // 24 hours
+            //headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept";
+            headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Access-Control-Allow-Headers, Origin";
+            //   headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers";
+            //headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type";
+            response.writeHead(200, headers);
+            response.end(JSON.stringify({processing: true}));
+            //response.end();
+        }*/
     }
 
 //    if (query.entity === "task" && query.action === "create"){
@@ -202,7 +239,8 @@ http.createServer(function (request, response) {
     //    var q = handle_database('select * from catalog');
     //    console.log('query result',q);
 
-       console.log("end");
+       //console.log("end");
+       LogRequest(request,'end');
 //    }
 
 }).listen(8081);

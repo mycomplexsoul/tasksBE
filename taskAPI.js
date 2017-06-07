@@ -25,12 +25,24 @@ let taskAPI = (function(MoSQL){
             sql = t.toInsertSQL();
             console.log('insert task',sql);
             let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
-            connection.executeSql(sql,(err,rows,fields) => {
-                connection.close();
+            connection.getData(`select * from task where tsk_id = '${node.post.tsk_id}'`,(err,rows,fields) => {
                 if (err){
-                    node.response.end(JSON.stringify({operationOK: false, message: 'Error on task creation. id: ' + strName}));
+                    console.log('got this error trying to validate if task exists',err);
+                    return false;
+                }
+
+                if (rows.length > 0){
+                    console.log(`Task already exists: ${strName}`);
+                    node.response.end(JSON.stringify({operationOK: false, message: 'Task already exists. id: ' + strName}));
                 } else {
-                    node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly. id: ' + strName}));
+                    connection.executeSql(sql,(err,rows,fields) => {
+                        connection.close();
+                        if (err){
+                            node.response.end(JSON.stringify({operationOK: false, message: 'Error on task creation. id: ' + strName}));
+                        } else {
+                            node.response.end(JSON.stringify({operationOK: true, message: 'Task created correctly. id: ' + strName}));
+                        }
+                    });
                 }
             });
         }
@@ -43,12 +55,18 @@ let taskAPI = (function(MoSQL){
             let connection = node.ConnectionService.getConnection(node.mysql);
             
             connection.getData(`select * from task where tsk_id = '${node.post.tsk_id}'`,(err,rows,fields) => {
+                let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
                 if (!err && rows.length > 0){
                     t.setDBAll(rows[0]); // original task from DB
+                } else {
+                    console.log('You try an update on a task that does not exist in the server. id: ' + strName);
+                    //node.response.end(JSON.stringify({operationOK: false, message: 'You try an update on a task that does not exist in the server. id: ' + strName}));
+                    // try insertion
+                    create(node);
+                    return;
                 }
                 taskWithChanges.setDBAll(node.post);
                 let sql = t.toUpdateSQL(taskWithChanges);
-                let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
 
                 console.log('update task',sql);
                 connection.executeSql(sql,(err,rows,fields) => {

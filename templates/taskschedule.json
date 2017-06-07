@@ -1,0 +1,58 @@
+{
+    "name": "TaskSchedule"
+    , "namespace": "common"
+    , "removeMeans": "DELETION"
+    , "authNeeded": false
+    , "displayOnMenu": false
+    , "prefix": "tss"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "AUTONUMERIC"
+        , "HEADERS(Task Schedule,Tasks Schedule)"
+        , "TABLE_NAME(TASKSCHEDULE)"
+        , "VIEW_NAME(VITASKSCHEDULE)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "tss_id"
+            , "isPK": true
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Id for the task"
+            , "entName": "TaskId"
+            , "captureRequired": true
+            , "displayName": "Task Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "tss_num_secuential"
+            , "isPK": true
+            , "dbComment": "Secuential assigned, ordering the schedule records precedence in time for the task"
+            , "specialRules": [
+                "DUPLICITY_ADD(tss_id)"
+            ]
+            , "entName": "Secuential"
+            , "displayName": "Secuential"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tss_date_start"
+            , "dbComment": "Date where the schedule was setted to start, indicating beginning of task attendance"
+            , "entName": "StartDate"
+            , "captureRequired": true
+            , "displayName": "Start Date"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tss_date_end"
+            , "dbComment": "Date where the schedule was setted to end, indicating stop of task attendance"
+            , "entName": "EndDate"
+            , "captureRequired": true
+            , "displayName": "End Date"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        }
+    ]
+    , "view": [
+    ]
+}
