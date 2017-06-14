@@ -37,10 +37,26 @@ let ConnectionService = (function(){
         let close = () => {
             connection.end();
         };
+        let runSql = (sql) => {
+            let p = new Promise((resolve,reject) => {
+                connection.query(sql,(err,rows,fields) => {
+                    if (err){
+                        console.log('There was an error with this sql: ' + sql + ', the error is: ' + err);
+                        reject(err);
+                    }
+                    if(!fields && rows.message){
+                        console.log('Message returned after running the sql: ' + rows.message);
+                    }
+                    resolve({sql,err,rows,fields});
+                });
+            });
+            return p;
+        }
         return {
             executeSql
             , getData
             , close
+            , runSql
         };
     };
 

@@ -34,6 +34,14 @@
             , "entName": "Secuential"
             , "displayName": "Secuential"
         },{
+            "templateId": "string"
+            , "dbName": "tsh_name"
+            , "size": 500
+            , "minLength": 1
+            , "dbComment": "Name of the task, meaning the task itself"
+            , "entName": "Name"
+            , "displayName": "Name"
+        },{
             "templateId": "datetime"
             , "dbName": "tsh_date_start"
             , "dbComment": "Date where the tracking started, indicating beginning of task attendance"
@@ -47,6 +55,12 @@
             , "entName": "EndDate"
             , "captureRequired": true
             , "displayName": "End Date"
+        },{
+            "templateId": "long"
+            , "dbName": "tsh_time_spent"
+            , "dbComment": "Time spent attending this task"
+            , "entName": "TimeSpent"
+            , "displayName": "Time Spent"
         },{
             "templateId": "user"
             , "dbName": "tsh_id_user"

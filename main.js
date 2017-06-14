@@ -129,6 +129,11 @@ http.createServer(function (request, response) {
                     taskAPI.batch({request,response,mysql,ConnectionService,post});
                     break;
                 }
+
+                case '/task/sync': {
+                    taskAPI.sync({request,response,mysql,ConnectionService,post});
+                    break;
+                }
             }
         });
 
