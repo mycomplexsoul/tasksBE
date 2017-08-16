@@ -54,9 +54,44 @@ let API = (function(MoSQL){
         }
     }
 
+    let update = function(node,config) {
+        let t = MoSQL.createModel(config.modelName);
+        let tWithChanges = MoSQL.createModel(config.modelName);
+        if (node.post){
+            let connection = node.ConnectionService.getConnection(node.mysql);
+            
+            return connection.runSql(config.sql.exist.replace('{0}',node.post[config.pkField])).then((response) => {
+                let strName = config.recordName(node.post);
+                if (response.err){
+                    console.log(`You try an update on a task that does not exist in the server. id: ${strName}`);
+                    // create it
+                    create(node,config).then((responseCreate) => {
+                        let msg = `You try an update on a ${config.recordRef} that does not exist in the server. id: ${strName}. Tried to create it.`;
+                        return {operationOk: responseCreate.operationOk, message: `${msg} ${responseCreate.message}`};
+                    });
+                }
+                if (!response.err && response.rows.length > 0){
+                    t.setDBAll(response.rows[0]); // original task from DB
+                }
+                tWithChanges.setDBAll(node.post);
+                let sql = t.toUpdateSQL(tWithChanges);
+
+                connection.runSql(sql).then((responseUpdate) => {
+                    connection.close();
+                    if (responseUpdate.err){
+                        return {operationOk: false, message: `Error on ${config.recordRef} modification. id: ${strName}`};
+                    } else {
+                        return {operationOk: true, message: `${config.recordRef} updated correctly. id: ${strName}`};
+                    }
+                });
+            });
+        }
+    }
+
     return {
         list
         , create
+        , update
     };
 })(MoSQL);
 module.exports = API;

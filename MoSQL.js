@@ -496,6 +496,64 @@ var MoSQL = (function(MoGen){
             return t;
         };
 
+        // method to return a name that identifies the record
+        t.recordName = function(){
+            let name = '';
+            t.getPK().forEach(pk => {
+                name = MoGen.concat(name,' / ') + pk.value;
+            });
+            return name;
+        }
+
+        /**
+         * Returns the SQL select query for the view.
+         * @return {string} SQL select query for the view.
+         */
+        t.sqlList = function(){
+            return `select * from ${t.viewName}`;
+        }
+
+        /**
+         * Returns the SQL select query for getting this record with its Primary Key from database.
+         * @return {string} SQL select query with PK for getting this single record from DB.
+         */
+        t.sqlSelect = function(){
+            let sql = '';
+            t.getPK().forEach(f => {
+                if (["integer","long","double"].indexOf(f.dbType) !== -1){
+                    sql = MoGen.concat(sql," and ") + `${f.dbName} = ${f.value}`;
+                } else if (f.dbType === "date"){
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '${formatDate(f.value)}'`;
+                } else if (f.dbType === "datetime"){
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '${formatDate(f.value,"yyyy-MM-dd HH:mm:ss")}'`;
+                } else {
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '${f.value}'`;
+                }
+            });
+            return `${t.sqlList()} where ${sql}`;
+        }
+
+        /**
+         * Returns the SQL select query for getting this record with its Primary Key as placeholders from database.
+         * @return {string} SQL select query with PK for getting a single record (with placeholders) from DB.
+         */
+        t.sqlSelectGeneric = function(){
+            let sql = '';
+            let counter = 0;
+            t.getPK().forEach(f => {
+                if (["integer","long","double"].indexOf(f.dbType) !== -1){
+                    sql = MoGen.concat(sql," and ") + `${f.dbName} = {${counter++}}`;
+                } else if (f.dbType === "date"){
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '{${counter++}}'`;
+                } else if (f.dbType === "datetime"){
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '{${counter++}}'`;
+                } else {
+                    sql = MoGen.concat(sql,",") + `${f.dbName} = '{${counter++}}'`;
+                }
+            });
+            return `${t.sqlList()} where ${sql}`;
+        }
+
         return t;
     }
 

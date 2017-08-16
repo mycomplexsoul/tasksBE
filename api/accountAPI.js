@@ -26,40 +26,13 @@ let API = (function(MoSQL,baseAPI){
             node.response.end(JSON.stringify(response));
         });
     }
-/* needs work below this */
+
     let update = function(node) {
-        let t = MoSQL.createModel("Task");
-        let taskWithChanges = MoSQL.createModel("Task");
-        if (node.post.tsk_name !== ''){
-            let connection = node.ConnectionService.getConnection(node.mysql);
-            
-            connection.getData(`select * from task where tsk_id = '${node.post.tsk_id}'`,(err,rows,fields) => {
-                let strName = node.post.tsk_id + ' / ' + node.post.tsk_name;
-                if (!err && rows.length > 0){
-                    t.setDBAll(rows[0]); // original task from DB
-                } else {
-                    console.log('You try an update on a task that does not exist in the server. id: ' + strName);
-                    //node.response.end(JSON.stringify({operationOk: false, message: 'You try an update on a task that does not exist in the server. id: ' + strName}));
-                    // try insertion
-                    create(node);
-                    return;
-                }
-                taskWithChanges.setDBAll(node.post);
-                let sql = t.toUpdateSQL(taskWithChanges);
-
-                console.log('update task',sql);
-                connection.executeSql(sql,(err,rows,fields) => {
-                    connection.close();
-                    if (err){
-                        node.response.end(JSON.stringify({operationOk: false, message: 'Error on task modification. id: ' + strName}));
-                    } else {
-                        node.response.end(JSON.stringify({operationOk: true, message: 'Task updated correctly. id: ' + strName}));
-                    }
-                });
-            });
-        }
+        baseAPI.update(node,config).then(response => {
+            node.response.end(JSON.stringify(response));
+        });
     }
-
+/* needs work below this */
     let batch = function(node) {
         let sql = "";
         let t = MoSQL.createModel("Task");
