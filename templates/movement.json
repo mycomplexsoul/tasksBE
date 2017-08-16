@@ -1,0 +1,174 @@
+{
+    "name": "Movement"
+    , "namespace": "Money"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "mov"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Movement,Movements)"
+        , "TABLE_NAME(MOVEMENT)"
+        , "VIEW_NAME(VIMOVEMENT)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "mov_id"
+            , "isPK": true
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Id for the movement"
+            , "entName": "MovementId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Movement Id"
+        },{
+            "templateId": "datetime"
+            , "dbName": "mov_date"
+            , "dbComment": "Date when the movement was made"
+            , "entName": "ApplicationDate"
+            , "captureRequired": true
+            , "displayName": "Date of Application"
+        },{
+            "templateId": "double"
+            , "dbName": "mov_amount"
+            , "dbComment": "Amount of the movement"
+            , "entName": "Amount"
+            , "captureRequired": true
+            , "displayName": "Amount"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_id_account"
+            , "size": 16
+            , "minLength": 1
+            , "dbComment": "Name for the account, appears on balance"
+            , "entName": "Account"
+            , "captureRequired": true
+            , "displayName": "Account"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_id_account_to"
+            , "size": 16
+            , "minLength": 1
+            , "dbComment": "Name for the destination account when doing a transfer, appears on balance"
+            , "entName": "AccountTo"
+            , "displayName": "Destination Account"
+        },{
+            "templateId": "integer"
+            , "dbName": "mov_ctg_type"
+            , "dbComment": "Type of Movement"
+            , "entName": "MovementType"
+            , "captureRequired": true
+            , "displayName": "Movement Type"
+            , "catalogId": "MOVEMENT_TYPES"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_budget"
+            , "size": 50
+            , "minLength": 1
+            , "dbComment": "Monthly Budget where this movement sums up"
+            , "entName": "Budget"
+            , "displayName": "Budget"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_id_category"
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Category for this movement, helps grouping movements"
+            , "entName": "Category"
+            , "captureRequired": true
+            , "displayName": "Category"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_id_place"
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Place where this movement was done, helps tracking movements"
+            , "entName": "Place"
+            , "captureRequired": true
+            , "displayName": "Place"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_desc"
+            , "size": 200
+            , "minLength": 1
+            , "dbComment": "Description of the movement, something to remember and track the movement"
+            , "entName": "Description"
+            , "displayName": "Description"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_tags"
+            , "size": 200
+            , "minLength": 1
+            , "dbComment": "Tags to help tracking, grouping and identifying trends for movements"
+            , "entName": "Tags"
+            , "displayName": "Tags"
+        },{
+            "templateId": "string"
+            , "dbName": "mov_id_user"
+            , "size": 50
+            , "dbComment": "User who this movement belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_type"
+        },{
+            "templateId": "table"
+            , "dbName": "mov_txt_account"
+            , "size": 100
+            , "originTable": "ACCOUNT"
+            , "linkedField": "ACCOUNT1.acc_name"
+        },{
+            "templateId": "table"
+            , "dbName": "mov_txt_account_to"
+            , "size": 100
+            , "originTable": "ACCOUNT"
+            , "linkedField": "ACCOUNT2.acc_name"
+        },{
+            "templateId": "table"
+            , "dbName": "mov_txt_category"
+            , "size": 100
+            , "originTable": "CATEGORY"
+            , "linkedField": "mct_name"
+        },{
+            "templateId": "table"
+            , "dbName": "mov_txt_place"
+            , "size": 100
+            , "originTable": "PLACE"
+            , "linkedField": "mpl_name"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+        {
+            "joinType": "INNER"
+            , "joinTable": "ACCOUNT ACCOUNT1"
+            , "joinStatement": "mov_id_account = ACCOUNT1.acc_id and mov_id_user = ACCOUNT1.acc_id_user"
+        },{
+            "joinType": "LEFT"
+            , "joinTable": "ACCOUNT ACCOUNT2"
+            , "joinStatement": "mov_id_account_to = ACCOUNT2.acc_id and mov_id_user = ACCOUNT2.acc_id_user"
+        },{
+            "joinType": "LEFT"
+            , "joinTable": "CATEGORY"
+            , "joinStatement": "mov_id_category = mct_id and mov_id_user = mct_id_user"
+        },{
+            "joinType": "LEFT"
+            , "joinTable": "PLACE"
+            , "joinStatement": "mov_id_place = mpl_id and mov_id_user = mpl_id_user"
+        }
+    ]
+}

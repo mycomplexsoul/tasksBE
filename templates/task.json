@@ -149,6 +149,124 @@
             , "entName": "UserAsigned"
             , "displayName": "User Asigned"
         },{
+            "templateId": "string"
+            , "dbName": "tsk_template"
+            , "size": 500
+            , "minLength": 1
+            , "allowNull": true
+            , "dbComment": "Template of the task, used for variable substitution on task creation"
+            , "entName": "Template"
+            , "displayName": "Template"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_template_state"
+            , "size": 4000
+            , "allowNull": true
+            , "dbComment": "State of variables used to substitute values in the template"
+            , "entName": "TemplateState"
+            , "displayName": "Template State"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_date_due"
+            , "allowNull": true
+            , "dbComment": "Date when the task should be completed"
+            , "entName": "DueDate"
+            , "displayName": "Due Date"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_id_related"
+            , "size": 32
+            , "minLength": 32
+            , "allowNull": true
+            , "dbComment": "Id of a related task"
+            , "entName": "RelatedTaskId"
+            , "displayName": "Related Task Id"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_url"
+            , "size": 4000
+            , "allowNull": true
+            , "dbComment": "Url related to the task"
+            , "entName": "Url"
+            , "displayName": "Url"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_repeats"
+            , "dbComment": "Indicates if this task repeats itself as a new undone task when finished"
+            , "entName": "Repeats"
+            , "displayName": "Repeats"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_id_main"
+            , "size": 32
+            , "minLength": 32
+            , "allowNull": true
+            , "dbComment": "Id of the main task that configured the repetition rules"
+            , "entName": "RepetitionMainTaskId"
+            , "displayName": "Repetition Main Task Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_rep_type"
+            , "dbComment": "Indicates the repetition rule that applies to the task when finished"
+            , "entName": "RepetitionType"
+            , "displayName": "Repetition Type"
+            , "catalogId": "TASK_REPETITION_TYPE"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_rep_after_completion"
+            , "dbComment": "Indicates the repetition projection should be calculated after the repetition or not"
+            , "entName": "RepeatAfterCompletion"
+            , "displayName": "Repeat After Completion"
+            , "catalogId": "BOOLEAN"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_rep_end"
+            , "dbComment": "Indicates the repetition end rule"
+            , "entName": "RepetitionEnd"
+            , "displayName": "Repetition Ends At"
+            , "catalogId": "TASK_REPETITION_END_AT"
+        },{
+            "templateId": "datetime"
+            , "dbName": "tsk_rep_date_end"
+            , "allowNull": true
+            , "dbComment": "Date when the repetitions end"
+            , "entName": "RepetitionEndDate"
+            , "displayName": "Repetition End Date"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_rep_end_iteration"
+            , "dbComment": "Total number of iterations that the task should be done to end repetition"
+            , "entName": "RepetitionEndIterations"
+            , "displayName": "Repetition End Iterations"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_rep_iteration"
+            , "dbComment": "Number of iteration of this task"
+            , "entName": "RepetitionIteration"
+            , "displayName": "Repetition Iteration"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_rep_frequency"
+            , "dbComment": "Frequency of repetition"
+            , "entName": "RepetitionFrequency"
+            , "displayName": "Repetition Frequency"
+        },{
+            "templateId": "integer"
+            , "dbName": "tsk_ctg_rep_frequency_rule"
+            , "dbComment": "Indicates the repetition frequency rule"
+            , "entName": "RepetitionFrequencyRule"
+            , "displayName": "Repetition Frequency Rule"
+            , "catalogId": "TASK_REPETITION_FREQUENCY"
+        },{
+            "templateId": "string"
+            , "dbName": "tsk_rep_weekdays"
+            , "size": 7
+            , "allowNull": true
+            , "dbComment": "Selected days of the week on task repetition"
+            , "entName": "RepetitionWeekdays"
+            , "displayName": "Repetition Days of the Week"
+        },{
             "templateId": "creationDate"
         },{
             "templateId": "modificationDate"
@@ -158,6 +276,21 @@
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_in_progress"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_repeats"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_rep_type"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_rep_after_completion"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_rep_end"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_rep_frequency_rule"
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_status"

@@ -1,0 +1,166 @@
+{
+    "name": "Entry"
+    , "namespace": "Money"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "ent"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Entry,Entries)"
+        , "TABLE_NAME(ENTRY)"
+        , "VIEW_NAME(VIENTRY)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "ent_id"
+            , "isPK": true
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Id for the entry movement"
+            , "entName": "MovementId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD(ent_sequential)"
+            ]
+            , "displayName": "Movement Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "ent_sequential"
+            , "isPK": true
+            , "dbComment": "Sequential for the entry inside the same movement"
+            , "entName": "Sequential"
+            , "specialRules": [
+                "DUPLICITY_ADD(ent_id)"
+            ]
+            , "displayName": "Sequential"
+        },{
+            "templateId": "datetime"
+            , "dbName": "ent_date"
+            , "dbComment": "Date when the entry was made"
+            , "entName": "ApplicationDate"
+            , "captureRequired": true
+            , "displayName": "Date of Application"
+        },{
+            "templateId": "double"
+            , "dbName": "ent_amount"
+            , "dbComment": "Amount of the entry"
+            , "entName": "Amount"
+            , "captureRequired": true
+            , "displayName": "Amount"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_id_account"
+            , "size": 16
+            , "minLength": 1
+            , "dbComment": "Name for the account, appears on balance"
+            , "entName": "Account"
+            , "captureRequired": true
+            , "displayName": "Account"
+        },{
+            "templateId": "integer"
+            , "dbName": "ent_ctg_type"
+            , "dbComment": "Type of Movement"
+            , "entName": "MovementType"
+            , "captureRequired": true
+            , "displayName": "Movement Type"
+            , "catalogId": "MOVEMENT_TYPES"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_budget"
+            , "size": 50
+            , "minLength": 1
+            , "dbComment": "Monthly Budget where this movement sums up"
+            , "entName": "Budget"
+            , "displayName": "Budget"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_id_category"
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Category for this movement, helps grouping movements"
+            , "entName": "Category"
+            , "captureRequired": true
+            , "displayName": "Category"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_id_place"
+            , "size": 32
+            , "minLength": 32
+            , "dbComment": "Place where this movement was done, helps tracking movements"
+            , "entName": "Place"
+            , "captureRequired": true
+            , "displayName": "Place"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_desc"
+            , "size": 200
+            , "minLength": 1
+            , "dbComment": "Description of the movement, something to remember and track the movement"
+            , "entName": "Description"
+            , "displayName": "Description"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_tags"
+            , "size": 200
+            , "minLength": 1
+            , "dbComment": "Tags to help tracking, grouping and identifying trends for movements"
+            , "entName": "Tags"
+            , "displayName": "Tags"
+        },{
+            "templateId": "string"
+            , "dbName": "ent_id_user"
+            , "size": 50
+            , "dbComment": "User who this entry belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_type"
+        },{
+            "templateId": "table"
+            , "dbName": "ent_txt_account"
+            , "size": 100
+            , "originTable": "ACCOUNT"
+            , "linkedField": "ACCOUNT1.acc_name"
+        },{
+            "templateId": "table"
+            , "dbName": "ent_txt_category"
+            , "size": 100
+            , "originTable": "CATEGORY"
+            , "linkedField": "mct_name"
+        },{
+            "templateId": "table"
+            , "dbName": "ent_txt_place"
+            , "size": 100
+            , "originTable": "PLACE"
+            , "linkedField": "mpl_name"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+        {
+            "joinType": "INNER"
+            , "joinTable": "ACCOUNT ACCOUNT1"
+            , "joinStatement": "ent_id_account = ACCOUNT1.acc_id and ent_id_user = ACCOUNT1.acc_id_user"
+        },{
+            "joinType": "LEFT"
+            , "joinTable": "CATEGORY"
+            , "joinStatement": "ent_id_category = mct_id and ent_id_user = mct_id_user"
+        },{
+            "joinType": "LEFT"
+            , "joinTable": "PLACE"
+            , "joinStatement": "ent_id_place = mpl_id and ent_id_user = mpl_id_user"
+        }
+    ]
+}

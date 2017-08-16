@@ -173,13 +173,13 @@ var MoSQL = (function(MoGen){
         t.model = {};
         t.db = {};
         obj.fields.forEach(function(f,index) {
-            let n = {}
-            Object.assign(n,template.getTemplate("base"));
-            if (f.templateId === "status"){
+            let n = {} // empty model
+            Object.assign(n,template.getTemplate("base")); //extends with base template
+            if (f.templateId === "status"){ // if field is status, extend with integer template
                 Object.assign(n,template.getTemplate("integer"));
             }
-            Object.assign(n,template.getTemplate(f.templateId),f);
-            Object.assign(n,template.getTemplate("order"));
+            Object.assign(n,template.getTemplate(f.templateId),f); // extend with template if provided for field
+            Object.assign(n,template.getTemplate("order")); // extend with order template
             n.templateId = f.templateId; 
             f.order = f.order || index;
             if (f.order){
@@ -198,7 +198,7 @@ var MoSQL = (function(MoGen){
                 n.linkedField = obj.prefix + n.linkedField;
             }
 
-            if (f.templateId === "catalog"){
+            if (f.templateId === "catalog"){ // extend with catalog template
                 // copy from linkedField data
                 let linkedField = t.fields.find((e) => e.dbName === n.linkedField);
                 if (linkedField){
@@ -207,6 +207,19 @@ var MoSQL = (function(MoGen){
                     n.entName = f.entName ? f.entName : `Text${linkedField.entName}`;
                     n.displayName = f.displayName ? f.displayName : linkedField.displayName;
                     n.catalogId = f.catalogId ? f.catalogId : linkedField.catalogId;
+                    n.allowNull = true;
+                }
+            }
+
+            if (f.templateId === "table"){ // extend with table template for linked fields
+                // copy from linkedField data
+                let linkedField = t.fields.find((e) => e.dbName === n.linkedField);
+                if (linkedField){
+                    n.dbComment = linkedField.dbComment;
+                    n.entName = f.entName ? f.entName : `Text${linkedField.entName}`;
+                    n.displayName = f.displayName ? f.displayName : linkedField.displayName;
+                    n.catalogId = f.catalogId ? f.catalogId : linkedField.catalogId;
+                    n.allowNull = true;
                 }
             }
             
@@ -317,7 +330,9 @@ var MoSQL = (function(MoGen){
                             fields = MoGen.concat(fields,", ") + `(select ctg_name from catalog where ctg_id = '${f.catalogId}' and ctg_sequential = ${f.linkedField}) as ${f.dbName}`;
                         } else {
                             fields = MoGen.concat(fields,", ") + `(select catalog2.ctg_name from catalog catalog2 where ctg_id = '${f.catalogId}' and catalog2.ctg_sequential = catalog.${f.linkedField}) as ${f.dbName}`;
-                        } 
+                        }
+                    } else {
+                        fields = MoGen.concat(fields,", ") + `(${f.linkedField}) as ${f.dbName}`;
                     }
                 }
             });

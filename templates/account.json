@@ -68,6 +68,13 @@
             , "entName": "PaymentDay"
             , "displayName": "Payment Day"
         },{
+            "templateId": "string"
+            , "dbName": "acc_id_user"
+            , "size": 50
+            , "dbComment": "User who this account belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
             "templateId": "creationDate"
         },{
             "templateId": "modificationDate"

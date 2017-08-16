@@ -2,7 +2,7 @@
 var MoSQL = require("./MoSQL");
 var MoInstall = (function(MoSQL){
     let install = (connection) => {
-        let models = ['Catalog','Task','User','TaskTimeTracking','Account','TaskSchedule','Logger'];
+        let models = ['Catalog','Task','User','TaskTimeTracking','Account','Category','Place','Movement','Entry','TaskSchedule','Logger'];
         let e;
         let method = function(msgOk){
             return function(err){
@@ -73,6 +73,27 @@ var MoInstall = (function(MoSQL){
         addCatalog('ACCOUNT_TYPES',3,'LOAN','ACCOUNT TO KEEP BALANCE OF A LOAN',8,new Date(),new Date(),1);
         addCatalog('ACCOUNT_TYPES',4,'OTHER','SPECIAL ACCOUNT',8,new Date(),new Date(),1);
 
+        addCatalog('MOVEMENT_TYPES',1,'EXPENSE','INDICATES THIS IS AN EXPENSE MOVEMENT',8,new Date(),new Date(),1);
+        addCatalog('MOVEMENT_TYPES',2,'INCOME','INDICATES THIS IS AN INCOME MOVEMENT',8,new Date(),new Date(),1);
+
+        addCatalog('TASK_REPETITION_TYPE',1,'DAILY','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',2,'WEEKLY','INDICATES THIS TASK REPEATS ONCE A WEEK',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',3,'BI-WEEKLY','INDICATES THIS TASK REPEATS ONCE EACH TWO WEEKS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',4,'MONTHLY','INDICATES THIS TASK REPEATS ONCE A MONTH',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',5,'YEARLY','INDICATES THIS TASK REPEATS ONCE A YEAR',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',6,'CUSTOM FREQUENCY','INDICATES THIS TASK REPEATS WITH A GIVEN CUSTOM FREQUENCY',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',7,'SOME DAYS OF THE WEEK','INDICATES THIS TASK REPEATS SOME DAYS OF THE WEEK',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_TYPE',8,'A DAY OF EACH MONTH','INDICATES THIS TASK REPEATS ONCE EACH MONTH WITH A SPECIAL RULE',8,new Date(),new Date(),1);
+
+        addCatalog('TASK_REPETITION_END_AT',1,'FOREVER','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_END_AT',2,'END ON DATE','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_END_AT',3,'END AFTER N REPETITIONS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+
+        addCatalog('TASK_REPETITION_FREQUENCY',1,'DAYS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_FREQUENCY',2,'WEEKS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_FREQUENCY',3,'MONTHS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        addCatalog('TASK_REPETITION_FREQUENCY',4,'YEARS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+
         inserts.forEach(i => {
             connection.executeSql(i,(err) => {
                 if (err){
@@ -105,11 +126,11 @@ var MoInstall = (function(MoSQL){
         /* Account */
         inserts = [];
         t = MoSQL.createModel("Account");
-        let addAccount = (AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,CreationDate,ModDate,Status) => {
-            inserts.push(t.setAll({AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,CreationDate,ModDate,Status}).toInsertSQL());
+        let addAccount = (AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,User,CreationDate,ModDate,Status) => {
+            inserts.push(t.setAll({AccountId,Name,AccountType,Comment,CheckDay,AverageMinBalance,PaymentDay,User,CreationDate,ModDate,Status}).toInsertSQL());
         };
 
-        addAccount('0000000000000001','CAPITAL',4,'Capital Account',1,0,0,new Date(),new Date(),1);
+        addAccount('0000000000000001','CAPITAL',4,'Capital Account',1,0,0,'all',new Date(),new Date(),1);
         
         inserts.forEach(i => {
             connection.executeSql(i,(err) => {

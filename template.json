@@ -70,6 +70,14 @@
         , "originTable": "CATALOG"
         , "formControl": "Textbox"
     },{
+        "templateId": "table"
+        , "dbType": "string"
+        , "isTableField": false
+        , "size": 250
+        , "allowNull": true
+        , "originTable": ""
+        , "formControl": "Textbox"
+    },{
         "templateId": "integer"
         , "dbType": "integer"
         , "size": 4

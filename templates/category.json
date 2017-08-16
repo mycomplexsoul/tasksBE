@@ -1,0 +1,57 @@
+{
+    "name": "Category"
+    , "namespace": "Money"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "mct"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Category,Categories)"
+        , "TABLE_NAME(CATEGORY)"
+        , "VIEW_NAME(VICATEGORY)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "mct_id"
+            , "isPK": true
+            , "size": 16
+            , "minLength": 16
+            , "dbComment": "Id for the category"
+            , "entName": "CategoryId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Category Id"
+        },{
+            "templateId": "string"
+            , "dbName": "mct_name"
+            , "size": 100
+            , "minLength": 1
+            , "dbComment": "Name for the category"
+            , "entName": "Name"
+            , "displayName": "Name"
+        },{
+            "templateId": "string"
+            , "dbName": "mct_id_user"
+            , "size": 50
+            , "dbComment": "User who this category belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+    ]
+}

@@ -7,6 +7,7 @@ var ConnectionService = require("./ConnectionService.js");
 var mysql = require('mysql');
 var qs = require('querystring');
 var taskAPI = require('./taskAPI.js');
+var accountAPI = require('./api/accountAPI.js');
 
 var utils = {
     parseUrlOnly: (url) => {
@@ -68,13 +69,17 @@ http.createServer(function (request, response) {
 
    var route = utils.parseUrlOnly(request.url);
    switch(route){
-       case '/online': {
-           response.end(JSON.stringify({operationOK: true}));
-       }
-       case '/task/list': {
-        taskAPI.list({request,response,mysql,ConnectionService});
-        break;
-       }
+        case '/online': {
+            response.end(JSON.stringify({operationOK: true}));
+        }
+        case '/task/list': {
+            taskAPI.list({request,response,mysql,ConnectionService});
+            break;
+        }
+        case '/account/list': {
+            accountAPI.list({request,response,mysql,ConnectionService});
+            break;
+        }
    }
 
    if (request.method == 'OPTIONS') {
