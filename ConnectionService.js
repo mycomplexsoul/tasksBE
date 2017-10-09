@@ -43,6 +43,7 @@ let ConnectionService = (function(){
                     if (err){
                         console.log('There was an error with this sql: ' + sql + ', the error is: ' + err);
                         reject(err);
+                        return false;
                     }
                     if(!fields && rows.message){
                         console.log('Message returned after running the sql: ' + rows.message);

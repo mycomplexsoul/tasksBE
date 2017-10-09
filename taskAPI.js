@@ -200,7 +200,7 @@ let taskAPI = (function(MoSQL){
                                     t.setDBAll(queryResponse.rows[0]); // original task from DB
                                     let taskWithChanges = MoSQL.createModel("Task");
                                     taskWithChanges.setDBAll(p.data);
-                                    let sql = t.toUpdateSQL(taskWithChanges);
+                                    sql = t.toUpdateSQL(taskWithChanges);
 
                                     console.log('update task',sql);
                                     connection.runSql(sql).then((updateResponse) => {
@@ -233,7 +233,7 @@ let taskAPI = (function(MoSQL){
                                             id: p.data.tsk_id
                                             , operationOk: false
                                             , action: 'create'
-                                            , reason: error
+                                            , reason: insertionError
                                         });
                                     });
                                 }
@@ -264,7 +264,7 @@ let taskAPI = (function(MoSQL){
                                                     id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
                                                     , operationOk: false
                                                     , action: 'create'
-                                                    , reason: error
+                                                    , reason: insertionError
                                                 });
                                             });
                                             
@@ -307,12 +307,12 @@ let taskAPI = (function(MoSQL){
                                                 id: p.data.tsk_id
                                                 , operationOk: false
                                                 , action: 'create'
-                                                , reason: error
+                                                , reason: insertionError
                                             });
                                         });
                                     }
                                     taskWithChanges.setDBAll(p.data);
-                                    let sql = t.toUpdateSQL(taskWithChanges);
+                                    sql = t.toUpdateSQL(taskWithChanges);
 
                                     console.log('update task',sql);
                                     connection.runSql(sql).then((updateResponse) => {
@@ -373,7 +373,7 @@ let taskAPI = (function(MoSQL){
                                                 }
 
                                                 ttWithChanges.setDBAll(tt);
-                                                let sql = h.toUpdateSQL(ttWithChanges);
+                                                sql = h.toUpdateSQL(ttWithChanges);
 
                                                 taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
                                                     connection.runSql(sqlh).then((insertResponse) => {
@@ -411,7 +411,9 @@ let taskAPI = (function(MoSQL){
         // Wait for all queries to finish before answering the request
         Promise.all(taskSyncPromiseResults).then(resultTasks => {
             Promise.all(taskTimeTrackingSyncPromiseResults).then(resultTimeTracking => {
-                connection.close();
+                if (connection){
+                    connection.close();
+                }
                 console.log('responses Tasks',resultTasks);
                 console.log('responses TimeTracking',resultTimeTracking);
                 node.response.end(JSON.stringify({
