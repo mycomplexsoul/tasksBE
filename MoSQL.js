@@ -373,6 +373,26 @@ var MoSQL = (function(MoGen){
             return sql;
         };
 
+        // changes based on other object
+        t.changesWith = function (otherObj) {
+            let changes = [];
+            if (otherObj !== null && typeof otherObj === "object"){
+                // other object with different values on some members
+                Object.keys(x.db).forEach(dbName => {
+                    n = x.getMetadataByDatabaseName(dbName);
+                    if (!n.isPK && otherObj.db[dbName]()){
+                        if (otherObj.db[dbName]() !== x.db[dbName]()){ // change value diff from current
+                            changes.push({
+                                dbName: n.dbName
+                                , value: x.getValueFormattedForSQL(n.entName,n.dbType,otherObj.db[dbName]())
+                            });
+                        }
+                    }
+                });
+            }
+            return changes;
+        };
+
         // update
         t.toUpdateSQL = function (changes) { // changes is either an Array of changes or an Object with same PK and different values on members
             var x = this;

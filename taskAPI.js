@@ -200,25 +200,35 @@ let taskAPI = (function(MoSQL){
                                     t.setDBAll(queryResponse.rows[0]); // original task from DB
                                     let taskWithChanges = MoSQL.createModel("Task");
                                     taskWithChanges.setDBAll(p.data);
-                                    sql = t.toUpdateSQL(taskWithChanges);
-
-                                    console.log('update task',sql);
-                                    connection.runSql(sql).then((updateResponse) => {
-                                        counters.forTimeTracking.updates.ok++;
+                                    if (t.changesWith(taskWithChanges).length){
+                                        sql = t.toUpdateSQL(taskWithChanges);
+    
+                                        console.log('update task',sql);
+                                        connection.runSql(sql).then((updateResponse) => {
+                                            counters.forTask.updates.ok++;
+                                            resolve({
+                                                id: p.data.tsk_id
+                                                , operationOk: true
+                                                , action: 'update'
+                                            });
+                                        }).catch((error) => {
+                                            counters.forTask.updates.err++;
+                                            resolve({
+                                                id: p.data.tsk_id
+                                                , operationOk: false
+                                                , action: 'update'
+                                                , reason: error
+                                            });
+                                        });
+                                    } else {
+                                        console.log('task did not had changes');
+                                        counters.forTask.updates.ok++;
                                         resolve({
                                             id: p.data.tsk_id
                                             , operationOk: true
                                             , action: 'update'
                                         });
-                                    }).catch((error) => {
-                                        counters.forTimeTracking.updates.err++;
-                                        resolve({
-                                            id: p.data.tsk_id
-                                            , operationOk: false
-                                            , action: 'update'
-                                            , reason: error
-                                        });
-                                    });
+                                    }
                                 } else { // task does not exist, insert it
                                     connection.runSql(sql).then(insertionResponse => {
                                         counters.forTask.insertions.ok++;
@@ -312,26 +322,35 @@ let taskAPI = (function(MoSQL){
                                         });
                                     }
                                     taskWithChanges.setDBAll(p.data);
-                                    sql = t.toUpdateSQL(taskWithChanges);
+                                    if (t.changesWith(taskWithChanges).length){
+                                        sql = t.toUpdateSQL(taskWithChanges);
 
-                                    console.log('update task',sql);
-                                    connection.runSql(sql).then((updateResponse) => {
-                                        counters.forTimeTracking.updates.ok++;
+                                        console.log('update task',sql);
+                                        connection.runSql(sql).then((updateResponse) => {
+                                            counters.forTask.updates.ok++;
+                                            resolve({
+                                                id: p.data.tsk_id
+                                                , operationOk: true
+                                                , action: 'update'
+                                            });
+                                        }).catch((error) => {
+                                            counters.forTask.updates.err++;
+                                            resolve({
+                                                id: p.data.tsk_id
+                                                , operationOk: false
+                                                , action: 'update'
+                                                , reason: error
+                                            });
+                                        });
+                                    } else {
+                                        console.log('task did not had changes');
+                                        counters.forTask.updates.ok++;
                                         resolve({
                                             id: p.data.tsk_id
                                             , operationOk: true
                                             , action: 'update'
                                         });
-                                    }).catch((error) => {
-                                        counters.forTimeTracking.updates.err++;
-                                        resolve({
-                                            id: p.data.tsk_id
-                                            , operationOk: false
-                                            , action: 'update'
-                                            , reason: error
-                                        });
-                                    });
-                                    
+                                    }
                                 });
                             });
 
@@ -373,26 +392,36 @@ let taskAPI = (function(MoSQL){
                                                 }
 
                                                 ttWithChanges.setDBAll(tt);
-                                                sql = h.toUpdateSQL(ttWithChanges);
+                                                if (h.changesWith(ttWithChanges).length){
+                                                    sql = h.toUpdateSQL(ttWithChanges);
 
-                                                taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
-                                                    connection.runSql(sqlh).then((insertResponse) => {
-                                                            counters.forTimeTracking.updates.ok++;
-                                                            resolve({
-                                                                id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
-                                                                , operationOk: true
-                                                                , action: 'update'
+                                                    taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
+                                                        connection.runSql(sqlh).then((insertResponse) => {
+                                                                counters.forTimeTracking.updates.ok++;
+                                                                resolve({
+                                                                    id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
+                                                                    , operationOk: true
+                                                                    , action: 'update'
+                                                                });
+                                                            }).catch((error) => {
+                                                                counters.forTimeTracking.updates.err++;
+                                                                resolve({
+                                                                    id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
+                                                                    , operationOk: false
+                                                                    , action: 'update'
+                                                                    , reason: error
+                                                                });
                                                             });
-                                                        }).catch((error) => {
-                                                            counters.forTimeTracking.updates.err++;
-                                                            resolve({
-                                                                id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
-                                                                , operationOk: false
-                                                                , action: 'update'
-                                                                , reason: error
-                                                            });
-                                                        });
-                                                }));
+                                                    }));
+                                                } else {
+                                                    console.log('task time tracking did not had changes');
+                                                    counters.forTimeTracking.updates.ok++;
+                                                    resolve({
+                                                        id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
+                                                        , operationOk: true
+                                                        , action: 'update'
+                                                    });
+                                                }
 
                                             });
 
