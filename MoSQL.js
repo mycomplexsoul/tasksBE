@@ -373,19 +373,34 @@ var MoSQL = (function(MoGen){
             return sql;
         };
 
+        t.datesAreEqual = function(date1, date2){
+            return (new Date(date1)).getTime() === (new Date(date2)).getTime();
+        };
+
         // changes based on other object
         t.changesWith = function (otherObj) {
+            var x = this;
             let changes = [];
+            var n;
             if (otherObj !== null && typeof otherObj === "object"){
                 // other object with different values on some members
                 Object.keys(x.db).forEach(dbName => {
                     n = x.getMetadataByDatabaseName(dbName);
                     if (!n.isPK && otherObj.db[dbName]()){
-                        if (otherObj.db[dbName]() !== x.db[dbName]()){ // change value diff from current
-                            changes.push({
-                                dbName: n.dbName
-                                , value: x.getValueFormattedForSQL(n.entName,n.dbType,otherObj.db[dbName]())
-                            });
+                        if (n.dbType === 'date' || n.dbType === 'datetime'){
+                            if (!x.datesAreEqual(otherObj.db[dbName](), x.db[dbName]())){ // change value diff from current
+                                changes.push({
+                                    dbName: n.dbName
+                                    , value: x.getValueFormattedForSQL(n.entName,n.dbType,otherObj.db[dbName]())
+                                });
+                            }
+                        } else {
+                            if (otherObj.db[dbName]() !== x.db[dbName]()){ // change value diff from current
+                                changes.push({
+                                    dbName: n.dbName
+                                    , value: x.getValueFormattedForSQL(n.entName,n.dbType,otherObj.db[dbName]())
+                                });
+                            }
                         }
                     }
                 });
@@ -402,9 +417,17 @@ var MoSQL = (function(MoGen){
             // iterate changes: entName, entNameOrig, value
             if (Array.isArray(changes)){
                 changes.forEach(function(ch){
-                    if (ch.value !== x.model[ch.entName]()){ // change value diff from current
-                        n = x.getMetadataByEntityName(ch.entName);
-                        sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value); 
+                    n = x.getMetadataByEntityName(ch.entName);
+                    if (n.dbType === 'date' || n.dbType === 'datetime'){
+                        if (!x.datesAreEqual(ch.value, x.model[ch.entName]())){ // change value diff from current
+                            console.log(`changes detection, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
+                            sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value);
+                        }
+                    } else {
+                        if (ch.value !== x.model[ch.entName]()){ // change value diff from current
+                            console.log(`changes detection, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
+                            sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value);
+                        }
                     }
                 });
             }
@@ -413,8 +436,16 @@ var MoSQL = (function(MoGen){
                 Object.keys(x.db).forEach(dbName => {
                     n = x.getMetadataByDatabaseName(dbName);
                     if (!n.isPK && changes.db[dbName]()){
-                        if (changes.db[dbName]() !== x.db[dbName]()){ // change value diff from current
-                            sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
+                        if (n.dbType === 'date' || n.dbType === 'datetime'){
+                            if (!x.datesAreEqual(changes.db[dbName](), x.db[dbName]())){ // change value diff from current
+                                console.log(`changes detection, previous: ${new Date(x.db[dbName]())}, newValue: ${new Date(changes.db[dbName]())}`);
+                                sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
+                            }
+                        } else {
+                            if (changes.db[dbName]() !== x.db[dbName]()){ // change value diff from current
+                                console.log(`changes detection, previous: ${x.db[dbName]()}, newValue: ${changes.db[dbName]()}`);
+                                sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
+                            }
                         }
                     }
                 });

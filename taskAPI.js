@@ -151,10 +151,10 @@ let taskAPI = (function(MoSQL){
 
     let sync = function(node) {
         // payload: [{action: 'create|update', data:{...}}]
-        let sql = "";
-        let sqlh = "";
-        let t = MoSQL.createModel("Task");
-        let h = MoSQL.createModel("TaskTimeTracking");
+        //let sql = "";
+        //let sqlh = "";
+        //let t = MoSQL.createModel("Task");
+        //let h = MoSQL.createModel("TaskTimeTracking");
         let connection;
         let counters = {
             forTask: {
@@ -189,10 +189,8 @@ let taskAPI = (function(MoSQL){
                 switch(p.action){
                     case 'create':{
                         let q = new Promise((resolve,reject) => {
-                            t = MoSQL.createModel("Task");
+                            let t = MoSQL.createModel("Task");
                             t.setDBAll(p.data);
-                            sql = t.toInsertSQL();
-                            console.log('insert task',sql);
 
                             connection.runSql(`select * from task where tsk_id = '${p.data.tsk_id}'`).then(queryResponse => {
                                 if (!queryResponse.err && queryResponse.rows.length > 0){
@@ -201,10 +199,7 @@ let taskAPI = (function(MoSQL){
                                     let taskWithChanges = MoSQL.createModel("Task");
                                     taskWithChanges.setDBAll(p.data);
                                     if (t.changesWith(taskWithChanges).length){
-                                        sql = t.toUpdateSQL(taskWithChanges);
-    
-                                        console.log('update task',sql);
-                                        connection.runSql(sql).then((updateResponse) => {
+                                        connection.runSql(t.toUpdateSQL(taskWithChanges)).then((updateResponse) => {
                                             counters.forTask.updates.ok++;
                                             resolve({
                                                 id: p.data.tsk_id
@@ -230,7 +225,7 @@ let taskAPI = (function(MoSQL){
                                         });
                                     }
                                 } else { // task does not exist, insert it
-                                    connection.runSql(sql).then(insertionResponse => {
+                                    connection.runSql(t.toInsertSQL()).then(insertionResponse => {
                                         counters.forTask.insertions.ok++;
                                         resolve({
                                             id: p.data.tsk_id
@@ -252,16 +247,15 @@ let taskAPI = (function(MoSQL){
                         });
                         taskSyncPromiseResults.push(q);
 
-                        Promise.all([q]).then((insertionStatus) => {
+                        Promise.all(taskSyncPromiseResults).then((insertionStatus) => {
                             if (insertionStatus.operationOk){
                                 // time tracking history (if present)
                                 if (p.data.tsk_time_history.length > 0){
                                     p.data.tsk_time_history.forEach(tt => {
-                                        h = MoSQL.createModel("TaskTimeTracking");
+                                        let h = MoSQL.createModel("TaskTimeTracking");
                                         h.setDBAll(tt);
-                                        sqlh = h.toInsertSQL();
                                         taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
-                                            connection.runSql(sqlh).then(insertionResponse => {
+                                            connection.runSql(h.toInsertSQL()).then(insertionResponse => {
                                                 counters.forTimeTracking.insertions.ok++;
                                                 resolve({
                                                     id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
@@ -287,6 +281,7 @@ let taskAPI = (function(MoSQL){
                         break;
                     }
                     case 'update':{
+                        let t = MoSQL.createModel("Task");
                         let taskWithChanges = MoSQL.createModel("Task");
 
                         if (p.data.tsk_name !== ''){
@@ -302,9 +297,7 @@ let taskAPI = (function(MoSQL){
                                         //node.response.end(JSON.stringify({operationOk: false, message: 'You try an update on a task that does not exist in the server. id: ' + strName}));
                                         // try insertion
                                         t.setDBAll(p.data);
-                                        sql = t.toInsertSQL();
-                                        console.log('insert task',sql);
-                                        connection.runSql(sql).then(insertionResponse => {
+                                        connection.runSql(t.toInsertSQL()).then(insertionResponse => {
                                             counters.forTask.insertions.ok++;
                                             resolve({
                                                 id: p.data.tsk_id
@@ -323,10 +316,7 @@ let taskAPI = (function(MoSQL){
                                     }
                                     taskWithChanges.setDBAll(p.data);
                                     if (t.changesWith(taskWithChanges).length){
-                                        sql = t.toUpdateSQL(taskWithChanges);
-
-                                        console.log('update task',sql);
-                                        connection.runSql(sql).then((updateResponse) => {
+                                        connection.runSql(t.toUpdateSQL(taskWithChanges)).then((updateResponse) => {
                                             counters.forTask.updates.ok++;
                                             resolve({
                                                 id: p.data.tsk_id
@@ -356,7 +346,8 @@ let taskAPI = (function(MoSQL){
 
                             taskSyncPromiseResults.push(q);
 
-                            Promise.all([q]).then((updateStatus) => {
+                            Promise.all(taskSyncPromiseResults).then((updateStatus) => {
+                                let h = MoSQL.createModel("TaskTimeTracking");
                                 if (updateStatus.operationOk){
                                     // time tracking history (if present)
                                     if (p.data.tsk_time_history.length > 0){
@@ -370,9 +361,8 @@ let taskAPI = (function(MoSQL){
                                                     console.log('You try an update on a task time tracking that does not exist in the server. id: ' + strName);
                                                     //node.response.end(JSON.stringify({operationOk: false, message: 'You try an update on a task that does not exist in the server. id: ' + strName}));
                                                     // try insertion
-                                                    sqlh = h.toInsertSQL();
                                                     taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
-                                                        connection.runSql(sqlh).then((insertResponse) => {
+                                                        connection.runSql(h.toInsertSQL()).then((insertResponse) => {
                                                             counters.forTimeTracking.insertions.ok++;
                                                             resolve({
                                                                 id: tt.tsh_id + ' / ' + tt.tsh_num_secuential
@@ -393,10 +383,8 @@ let taskAPI = (function(MoSQL){
 
                                                 ttWithChanges.setDBAll(tt);
                                                 if (h.changesWith(ttWithChanges).length){
-                                                    sql = h.toUpdateSQL(ttWithChanges);
-
                                                     taskTimeTrackingSyncPromiseResults.push(new Promise((resolve,reject) => {
-                                                        connection.runSql(sqlh).then((insertResponse) => {
+                                                        connection.runSql(h.toUpdateSQL(ttWithChanges)).then((insertResponse) => {
                                                                 counters.forTimeTracking.updates.ok++;
                                                                 resolve({
                                                                     id: tt.tsh_id + ' / ' + tt.tsh_num_secuential

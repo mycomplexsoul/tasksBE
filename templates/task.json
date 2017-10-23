@@ -89,7 +89,7 @@
             , "displayName": "Total Time Spent"
         },{
             "templateId": "integer"
-            , "dbName": "tsk_ctg_in_progress"
+            , "dbName": "tsk_ctg_in_process"
             , "dbComment": "Indicates if this task is currently being attended or not"
             , "entName": "InProgress"
             , "displayName": "In Progress"
@@ -275,7 +275,7 @@
             , "catalogId": "RECORD_STATUS"
         },{
             "templateId": "catalog"
-            , "linkedField": "_ctg_in_progress"
+            , "linkedField": "_ctg_in_process"
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_repeats"
