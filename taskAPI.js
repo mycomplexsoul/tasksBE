@@ -6,15 +6,17 @@ let taskAPI = (function(MoSQL){
         let connection = node.ConnectionService.getConnection(node.mysql);
         let sql = "select * from task";
         let data = [];
-        connection.getData(sql,(err,rows,fields) => {
-            if (!err){
-                data = rows;
+        return connection.runSql(sql).then(selectResponse => {
+            if (!selectResponse.err){
+                data = selectResponse.rows;
+            } else {
+                node.response.end(JSON.stringify(data));
             }
             // add time tracking
-            connection.getData('select * from tasktimetracking',(err,rows,fields) => {
+            return connection.runSql('select * from tasktimetracking').then(timeResponse => {
                 let tt = [];
-                if (!err){
-                    tt = rows;
+                if (!timeResponse.err){
+                    tt = timeResponse.rows;
                 }
                 data.forEach((t) => {
                     t.tsk_time_history = tt.filter(h => h.tsh_id === t.tsk_id) || [];
@@ -22,6 +24,7 @@ let taskAPI = (function(MoSQL){
 
                 connection.close();
                 node.response.end(JSON.stringify(data));
+                return true;
             });
         });
     };
