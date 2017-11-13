@@ -5,6 +5,7 @@ let taskAPI = (function(MoSQL){
     let list = function(node) {
         let connection = node.ConnectionService.getConnection(node.mysql);
         let sql = "select * from task";
+        sql += " where tsk_date_add >= '2017-10-01' or tsk_ctg_status != 3"
         let data = [];
         return connection.runSql(sql).then(selectResponse => {
             if (!selectResponse.err){
