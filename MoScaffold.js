@@ -18,6 +18,7 @@ var MoScaffold = (function(){
 
     function generateTypeFile(){
         let str = '';
+        let tab = '\t';
         let entityName = this._model.entityName;
         const types = {
             integer: 'number'
@@ -26,13 +27,24 @@ var MoScaffold = (function(){
             , string: 'string'
             , date: 'Date'
             , datetime: 'Date'
-        }
+        };
 
         str += `export class ${entityName} {`;
         this._model.fields.forEach(f => {
-            str += `public ${f.dbName}: ${f.dbType}`;
+            str += tab + `public ${f.dbName}: ${types[f.dbType]};`;
         });
-        str += `}`
+        
+        // constructor
+        str += tab + `constructor(base?: any){`;
+        str += tab + tab + `if(base !== undefined){`;
+        this._model.fields.forEach(f => {
+            str += tab + tab + tab + `this.${f.dbName} = base.${f.dbName};`;
+        });
+        str += tab + tab + `}`;
+        str += tab + `}`;
+        str += `}`;
+
+        // write file
     }
 
     return {
