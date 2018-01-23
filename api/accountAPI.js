@@ -16,15 +16,11 @@ let API = (function(MoSQL,baseAPI){
     };
 
     let list = function(node) {
-        baseAPI.list(node,config).then(data => {
-            node.response.end(JSON.stringify(data));
-        });
+        baseAPI.api('list',node,config);
     };
 
     let create = function(node) {
-        baseAPI.create(node,config).then(response => {
-            node.response.end(JSON.stringify(response));
-        });
+        baseAPI.api('create',node,config);
     }
 
     let update = function(node) {

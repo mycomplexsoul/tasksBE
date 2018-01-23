@@ -88,6 +88,12 @@ let API = (function(MoSQL){
         }
     }
 
+    let api = function(method,node,config) {
+        return this[method](node,config).then(data => {
+            node.response.end(JSON.stringify(data));
+        });
+    };
+
     return {
         list
         , create

@@ -2,7 +2,13 @@
 var MoSQL = require("./MoSQL");
 var MoInstall = (function(MoSQL){
     let install = (connection) => {
-        let models = ['Catalog','Task','User','TaskTimeTracking','Account','Category','Place','Movement','Entry','TaskSchedule','Logger'];
+        let models = [
+        'Catalog'
+        ,'User'
+        ,'Logger'
+        ,'Task','TaskTimeTracking','TaskSchedule'
+        , 'Account','Category','Place','Movement','Entry','Balance'
+        ];
         let e;
         let method = function(msgOk){
             return function(err){
@@ -49,7 +55,8 @@ var MoInstall = (function(MoSQL){
         addCatalog('CATALOGS',4,'BOOLEAN','A YES/NO PARSE',4,new Date(),new Date(),1);
         addCatalog('CATALOGS',5,'USER_TYPES','USER TYPES FOR USER CLASSIFICATION',4,new Date(),new Date(),1);
         addCatalog('CATALOGS',6,'ACCOUNT_TYPES','ACCOUNT TYPES FOR ACCOUNT CLASIFICATION',4,new Date(),new Date(),1);
-        
+        addCatalog('CATALOGS',7,'MOVEMENT_TYPES','MOVEMENT TYPES FOR HANDLING MONEY',4,new Date(),new Date(),1);
+        //#region CATALOG_PERMISSIONS
         addCatalog("CATALOG_PERMISSIONS",1,"ADD AND EDIT RECORDS","USERS CAN ADD RECORDS AND CAN EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
         addCatalog("CATALOG_PERMISSIONS",2,"ADD AND NOT EDIT RECORDS","USERS CAN ADD RECORDS AND CAN NOT EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
         addCatalog("CATALOG_PERMISSIONS",3,"NOT ADD AND EDIT RECORDS","USERS CAN NOT ADD RECORDS AND CAN EDIT RECORDS ON THIS CATALOG",8,new Date(),new Date(),1);
@@ -58,7 +65,7 @@ var MoInstall = (function(MoSQL){
         addCatalog('CATALOG_PERMISSIONS',6,'EDIT AND NOT DELETE THIS RECORD','USERS CAN EDIT AND CAN NOT DELETE THIS RECORD',8,new Date(),new Date(),1);
         addCatalog('CATALOG_PERMISSIONS',7,'NOT EDIT AND DELETE THIS RECORD','USERS CAN NOT EDIT AND CAN DELETE THIS RECORD',8,new Date(),new Date(),1);
         addCatalog('CATALOG_PERMISSIONS',8,'NOT EDIT AND NOT DELETE THIS RECORD','USERS CAN NOT EDIT AND CAN NOT DELETE THIS RECORD',8,new Date(),new Date(),1);
-        
+        //#endregion
         addCatalog('RECORD_STATUS',1,'ACTIVE','THE RECORD IS ACTIVE AND CAN BE USED IN THE APPLICATION',8,new Date(),new Date(),1);
         addCatalog('RECORD_STATUS',2,'CANCELLED','THE RECORD IS CANCELLED AND IT CAN NOT BE USED BY THE APPLICATION',8,new Date(),new Date(),1);
 
@@ -75,7 +82,7 @@ var MoInstall = (function(MoSQL){
 
         addCatalog('MOVEMENT_TYPES',1,'EXPENSE','INDICATES THIS IS AN EXPENSE MOVEMENT',8,new Date(),new Date(),1);
         addCatalog('MOVEMENT_TYPES',2,'INCOME','INDICATES THIS IS AN INCOME MOVEMENT',8,new Date(),new Date(),1);
-
+        //#region TASK_REPETITION_TYPE
         addCatalog('TASK_REPETITION_TYPE',1,'DAILY','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_TYPE',2,'WEEKLY','INDICATES THIS TASK REPEATS ONCE A WEEK',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_TYPE',3,'BI-WEEKLY','INDICATES THIS TASK REPEATS ONCE EACH TWO WEEKS',8,new Date(),new Date(),1);
@@ -84,7 +91,7 @@ var MoInstall = (function(MoSQL){
         addCatalog('TASK_REPETITION_TYPE',6,'CUSTOM FREQUENCY','INDICATES THIS TASK REPEATS WITH A GIVEN CUSTOM FREQUENCY',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_TYPE',7,'SOME DAYS OF THE WEEK','INDICATES THIS TASK REPEATS SOME DAYS OF THE WEEK',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_TYPE',8,'A DAY OF EACH MONTH','INDICATES THIS TASK REPEATS ONCE EACH MONTH WITH A SPECIAL RULE',8,new Date(),new Date(),1);
-
+        //#endregion
         addCatalog('TASK_REPETITION_END_AT',1,'FOREVER','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_END_AT',2,'END ON DATE','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_END_AT',3,'END AFTER N REPETITIONS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
@@ -93,6 +100,8 @@ var MoInstall = (function(MoSQL){
         addCatalog('TASK_REPETITION_FREQUENCY',2,'WEEKS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_FREQUENCY',3,'MONTHS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
         addCatalog('TASK_REPETITION_FREQUENCY',4,'YEARS','INDICATES THIS TASK REPEATS ON A DAILY BASIS',8,new Date(),new Date(),1);
+        
+        addCatalog('CURRENCIES',1,'MXN','MEXICAN PESO',8,new Date(),new Date(),1);
 
         inserts.forEach(i => {
             connection.executeSql(i,(err) => {

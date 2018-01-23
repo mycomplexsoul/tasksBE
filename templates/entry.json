@@ -43,6 +43,13 @@
             , "captureRequired": true
             , "displayName": "Date of Application"
         },{
+            "templateId": "integer"
+            , "dbName": "ent_ctg_currency"
+            , "isPK": true
+            , "dbComment": "Currency of the entry"
+            , "entName": "Currency"
+            , "displayName": "Currency"
+        },{
             "templateId": "double"
             , "dbName": "ent_amount"
             , "dbComment": "Amount of the entry"
@@ -125,6 +132,9 @@
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_type"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_currency"
         },{
             "templateId": "table"
             , "dbName": "ent_txt_account"

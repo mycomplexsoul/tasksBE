@@ -33,6 +33,12 @@
             , "captureRequired": true
             , "displayName": "Date of Application"
         },{
+            "templateId": "integer"
+            , "dbName": "mov_ctg_currency"
+            , "dbComment": "Currency of the movement"
+            , "entName": "Currency"
+            , "displayName": "Currency"
+        },{
             "templateId": "double"
             , "dbName": "mov_amount"
             , "dbComment": "Amount of the movement"
@@ -100,12 +106,12 @@
             , "displayName": "Description"
         },{
             "templateId": "string"
-            , "dbName": "mov_tags"
+            , "dbName": "mov_notes"
             , "size": 200
             , "minLength": 1
-            , "dbComment": "Tags to help tracking, grouping and identifying trends for movements"
-            , "entName": "Tags"
-            , "displayName": "Tags"
+            , "dbComment": "Notes for movements"
+            , "entName": "Notes"
+            , "displayName": "Notes"
         },{
             "templateId": "string"
             , "dbName": "mov_id_user"
@@ -123,6 +129,9 @@
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_type"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_currency"
         },{
             "templateId": "table"
             , "dbName": "mov_txt_account"

@@ -1,0 +1,113 @@
+{
+    "name": "Balance"
+    , "namespace": "Money"
+    , "removeMeans": "CANCELATION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "bal"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(Balance,Balance)"
+        , "TABLE_NAME(BALANCE)"
+        , "VIEW_NAME(VIBALANCE)"
+    ]
+    , "fields": [
+        {
+            "templateId": "integer"
+            , "dbName": "bal_year"
+            , "isPK": true
+            , "dbComment": "Year of the balance record"
+            , "entName": "Year"
+            , "specialRules": [
+                "DUPLICITY_ADD(bal_year,bal_month,bal_ctg_currency,bal_id_account)"
+            ]
+            , "displayName": "Year"
+        },{
+            "templateId": "integer"
+            , "dbName": "bal_month"
+            , "isPK": true
+            , "dbComment": "Month of the balance record"
+            , "entName": "Month"
+            , "specialRules": [
+                "DUPLICITY_ADD(bal_year,bal_month,bal_ctg_currency,bal_id_account)"
+            ]
+            , "displayName": "Month"
+        },{
+            "templateId": "integer"
+            , "dbName": "bal_ctg_currency"
+            , "isPK": true
+            , "dbComment": "Currency of the balance record"
+            , "entName": "Currency"
+            , "specialRules": [
+                "DUPLICITY_ADD(bal_year,bal_month,bal_ctg_currency,bal_id_account)"
+            ]
+            , "displayName": "Currency"
+        },{
+            "templateId": "string"
+            , "dbName": "bal_id_account"
+            , "isPK": true
+            , "size": 16
+            , "minLength": 1
+            , "dbComment": "Name for the account"
+            , "entName": "Account"
+            , "displayName": "Account"
+        },{
+            "templateId": "double"
+            , "dbName": "bal_initial"
+            , "dbComment": "Initial balance of the record"
+            , "entName": "Initial"
+            , "displayName": "Initial"
+        },{
+            "templateId": "double"
+            , "dbName": "bal_charges"
+            , "dbComment": "Charges of the record"
+            , "entName": "Charges"
+            , "displayName": "Charges"
+        },{
+            "templateId": "double"
+            , "dbName": "bal_withdrawals"
+            , "dbComment": "Withdrawals of the record"
+            , "entName": "Withdrawals"
+            , "displayName": "Withdrawals"
+        },{
+            "templateId": "double"
+            , "dbName": "bal_final"
+            , "dbComment": "Final balance of the record"
+            , "entName": "Final"
+            , "displayName": "Final"
+        },{
+            "templateId": "string"
+            , "dbName": "bal_id_user"
+            , "size": 50
+            , "dbComment": "User who this balance record belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "table"
+            , "dbName": "bal_txt_account"
+            , "size": 100
+            , "originTable": "ACCOUNT"
+            , "linkedField": "ACCOUNT1.acc_name"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_currency"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+        {
+            "joinType": "INNER"
+            , "joinTable": "ACCOUNT ACCOUNT1"
+            , "joinStatement": "bal_id_account = ACCOUNT1.acc_id and bal_id_user = ACCOUNT1.acc_id_user"
+        }
+    ]
+}
