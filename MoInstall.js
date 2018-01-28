@@ -8,6 +8,7 @@ var MoInstall = (function(MoSQL){
         ,'Logger'
         ,'Task','TaskTimeTracking','TaskSchedule'
         , 'Account','Category','Place','Movement','Entry','Balance'
+        , 'LastTime','LastTimeHistory'
         ];
         let e;
         let method = function(msgOk){
