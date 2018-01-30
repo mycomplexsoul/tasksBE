@@ -46,6 +46,7 @@ let API = (function(MoSQL,baseAPI){
                     connection.executeSql(sql,(err,rows,fields) => {
                         if (err){
                             insertionsError += 1;
+                            console.log('err object', model);
                             reject(err);
                         } else {
                             insertionsOk += 1;
@@ -60,6 +61,13 @@ let API = (function(MoSQL,baseAPI){
             connection.close();
             node.response.end(JSON.stringify({operationOk: true, message: `Batch finished, inserted ok: ${insertionsOk}, errors: ${insertionsError}`}));
         });
+    };
+
+    return {
+        list
+        , create
+        , update
+        , batch
     };
 })(MoSQL,baseAPI);
 module.exports = API;

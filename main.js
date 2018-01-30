@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var taskAPI = require('./taskAPI.js');
 var accountAPI = require('./api/accountAPI.js');
+var movementAPI = require('./api/movementAPI.js');
 
 var utils = {
     parseUrlOnly: (url) => {
@@ -137,6 +138,11 @@ http.createServer(function (request, response) {
 
                 case '/task/sync': {
                     taskAPI.sync({request,response,mysql,ConnectionService,post});
+                    break;
+                }
+
+                case '/movement/batch': {
+                    movementAPI.batch({request,response,mysql,ConnectionService,post});
                     break;
                 }
             }

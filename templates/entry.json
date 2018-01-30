@@ -78,6 +78,7 @@
             , "dbName": "ent_budget"
             , "size": 50
             , "minLength": 1
+            , "allowNull": true
             , "dbComment": "Monthly Budget where this movement sums up"
             , "entName": "Budget"
             , "displayName": "Budget"
@@ -109,12 +110,13 @@
             , "displayName": "Description"
         },{
             "templateId": "string"
-            , "dbName": "ent_tags"
+            , "dbName": "ent_notes"
             , "size": 200
             , "minLength": 1
-            , "dbComment": "Tags to help tracking, grouping and identifying trends for movements"
-            , "entName": "Tags"
-            , "displayName": "Tags"
+            , "allowNull": true
+            , "dbComment": "Notes to help tracking, grouping and identifying trends for movements"
+            , "entName": "Notes"
+            , "displayName": "Notes"
         },{
             "templateId": "string"
             , "dbName": "ent_id_user"

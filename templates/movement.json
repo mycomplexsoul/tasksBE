@@ -59,6 +59,7 @@
             , "dbName": "mov_id_account_to"
             , "size": 16
             , "minLength": 1
+            , "allowNull": true
             , "dbComment": "Name for the destination account when doing a transfer, appears on balance"
             , "entName": "AccountTo"
             , "displayName": "Destination Account"
@@ -75,6 +76,7 @@
             , "dbName": "mov_budget"
             , "size": 50
             , "minLength": 1
+            , "allowNull": true
             , "dbComment": "Monthly Budget where this movement sums up"
             , "entName": "Budget"
             , "displayName": "Budget"
@@ -109,6 +111,7 @@
             , "dbName": "mov_notes"
             , "size": 200
             , "minLength": 1
+            , "allowNull": true
             , "dbComment": "Notes for movements"
             , "entName": "Notes"
             , "displayName": "Notes"
