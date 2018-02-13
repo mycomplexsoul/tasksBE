@@ -1,0 +1,83 @@
+{
+    "name": "LastTimeHistory"
+    , "namespace": "LastTimeHistoryApp"
+    , "removeMeans": "DELETION"
+    , "authNeeded": false
+    , "displayOnMenu": true
+    , "prefix": "lth"
+    , "permissionsTemplate": "permissions_all"
+    , "specialFeatures": [
+        "HEADERS(LastTimeHistory,LastTimeHistory items)"
+        , "TABLE_NAME(LASTTIMEHISTORY)"
+        , "VIEW_NAME(VILASTTIMEHISTORY)"
+    ]
+    , "fields": [
+        {
+            "templateId": "string"
+            , "dbName": "lth_id"
+            , "isPK": true
+            , "size": 16
+            , "minLength": 16
+            , "dbComment": "Id for the last time record"
+            , "entName": "LastTimeHistoryId"
+            , "captureRequired": true
+            , "specialRules": [
+                "DUPLICITY_ADD"
+            ]
+            , "displayName": "Last Time Id"
+        },{
+            "templateId": "integer"
+            , "dbName": "lth_num_sequential"
+            , "isPK": true
+            , "dbComment": "Secuential of changes done to this record"
+            , "specialRules": [
+                "DUPLICITY_ADD(lth_id)"
+            ]
+            , "entName": "Secuential"
+            , "displayName": "Secuential"
+        },{
+            "templateId": "string"
+            , "dbName": "lth_name"
+            , "size": 500
+            , "minLength": 1
+            , "dbComment": "Name or description for the last time thing"
+            , "entName": "Name"
+            , "displayName": "Name"
+        },{
+            "templateId": "string"
+            , "dbName": "lth_value"
+            , "size": 10
+            , "minLength": 1
+            , "dbComment": "Value of the last time user does this thing"
+            , "entName": "Value"
+            , "displayName": "Value"
+        },{
+            "templateId": "string"
+            , "dbName": "lth_notes"
+            , "size": 1000
+            , "minLength": 1
+            , "dbComment": "Any description or notes for the last time thing"
+            , "entName": "Notes"
+            , "displayName": "Notes"
+        },{
+            "templateId": "string"
+            , "dbName": "lth_id_user"
+            , "size": 50
+            , "dbComment": "User who this last time record belongs to"
+            , "entName": "User"
+            , "displayName": "User"
+        },{
+            "templateId": "creationDate"
+        },{
+            "templateId": "modificationDate"
+        },{
+            "templateId": "status"
+            , "catalogId": "RECORD_STATUS"
+        },{
+            "templateId": "catalog"
+            , "linkedField": "_ctg_status"
+        }
+    ]
+    , "view": [
+    ]
+}
