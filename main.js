@@ -81,6 +81,10 @@ http.createServer(function (request, response) {
             accountAPI.list({request,response,mysql,ConnectionService});
             break;
         }
+        case '/movement/generateEntries': {
+            movementAPI.generateEntries({request,response,mysql,ConnectionService,post});
+            break;
+        }
    }
 
    if (request.method == 'OPTIONS') {
