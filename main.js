@@ -85,6 +85,10 @@ http.createServer(function (request, response) {
             movementAPI.generateEntries({request,response,mysql,ConnectionService,post});
             break;
         }
+        case '/movement/generateBalance': {
+            movementAPI.generateBalance({request,response,mysql,ConnectionService,post});
+            break;
+        }
    }
 
    if (request.method == 'OPTIONS') {
