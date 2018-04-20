@@ -9,6 +9,7 @@ var qs = require('querystring');
 var taskAPI = require('./taskAPI.js');
 var accountAPI = require('./api/accountAPI.js');
 var movementAPI = require('./api/movementAPI.js');
+var MoScaffold = require('./MoScaffold.js');
 
 var utils = {
     parseUrlOnly: (url) => {
@@ -69,17 +70,29 @@ http.createServer(function (request, response) {
    }
 
    var route = utils.parseUrlOnly(request.url);
+   let common = {request,response,mysql,ConnectionService};
    switch(route){
         case '/online': {
             response.end(JSON.stringify({operationOK: true}));
         }
         case '/task/list': {
-            taskAPI.list({request,response,mysql,ConnectionService});
+            taskAPI.list(common);
             break;
         }
         case '/account/list': {
-            accountAPI.list({request,response,mysql,ConnectionService});
+            accountAPI.list(common);
             break;
+        }
+        case '/movement/list': {
+            movementAPI.list(common);
+            break;
+        }
+        case '/generate': {
+            let model = MoSQL.createModel('movement');
+            MoScaffold.init(model);
+            MoScaffold.generateTypeFile();
+            MoScaffold.generateAPIFile();
+            response.end(JSON.stringify({operationOK: true, message: 'generation ok'}));
         }
    }
 
@@ -119,30 +132,31 @@ http.createServer(function (request, response) {
             if (post.tsk_id){
                 Log(`Processing request ${request.method} for ${request.url} for task id: ${post.tsk_id} / ${post.tsk_name}`);
             }
+            let requestCommon = {request,response,mysql,ConnectionService,post};
 
             switch(route){
                 case '/task/create': {
-                    taskAPI.create({request,response,mysql,ConnectionService,post});
+                    taskAPI.create(requestCommon);
                     break;
                 }
 
                 case '/task/update': {
-                    taskAPI.update({request,response,mysql,ConnectionService,post});
+                    taskAPI.update(requestCommon);
                     break;
                 }
 
                 case '/task/batch': {
-                    taskAPI.batch({request,response,mysql,ConnectionService,post});
+                    taskAPI.batch(requestCommon);
                     break;
                 }
 
                 case '/task/sync': {
-                    taskAPI.sync({request,response,mysql,ConnectionService,post});
+                    taskAPI.sync(requestCommon);
                     break;
                 }
 
                 case '/movement/batch': {
-                    movementAPI.batch({request,response,mysql,ConnectionService,post});
+                    movementAPI.batch(requestCommon);
                     break;
                 }
             }

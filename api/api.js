@@ -98,6 +98,7 @@ let API = (function(MoSQL){
         list
         , create
         , update
+        , api
     };
 })(MoSQL);
 module.exports = API;

@@ -420,12 +420,12 @@ var MoSQL = (function(MoGen){
                     n = x.getMetadataByEntityName(ch.entName);
                     if (n.dbType === 'date' || n.dbType === 'datetime'){
                         if (!x.datesAreEqual(ch.value, x.model[ch.entName]())){ // change value diff from current
-                            console.log(`changes detection, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
+                            console.log(`changes detection, field ${ch.entName}, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
                             sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value);
                         }
                     } else {
                         if (ch.value !== x.model[ch.entName]()){ // change value diff from current
-                            console.log(`changes detection, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
+                            console.log(`changes detection, field ${ch.entName}, previous: ${x.model[ch.entName]()}, newValue: ${ch.value}`);
                             sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,ch.value);
                         }
                     }
@@ -435,15 +435,15 @@ var MoSQL = (function(MoGen){
                 // other object with different values on some members
                 Object.keys(x.db).forEach(dbName => {
                     n = x.getMetadataByDatabaseName(dbName);
-                    if (!n.isPK && changes.db[dbName]()){
+                    if (!n.isPK/* && changes.db[dbName]()*/){
                         if (n.dbType === 'date' || n.dbType === 'datetime'){
                             if (!x.datesAreEqual(changes.db[dbName](), x.db[dbName]())){ // change value diff from current
-                                console.log(`changes detection, previous: ${new Date(x.db[dbName]())}, newValue: ${new Date(changes.db[dbName]())}`);
+                                console.log(`changes detection, field ${dbName}, previous: ${new Date(x.db[dbName]())}, newValue: ${new Date(changes.db[dbName]())}`);
                                 sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
                             }
                         } else {
                             if (changes.db[dbName]() !== x.db[dbName]()){ // change value diff from current
-                                console.log(`changes detection, previous: ${x.db[dbName]()}, newValue: ${changes.db[dbName]()}`);
+                                console.log(`changes detection, field ${dbName}, previous: ${x.db[dbName]()}, newValue: ${changes.db[dbName]()}`);
                                 sqlChanges = MoGen.concat(sqlChanges,", ") + n.dbName + " = " + x.getValueFormattedForSQL(n.entName,n.dbType,changes.db[dbName]()); 
                             }
                         }

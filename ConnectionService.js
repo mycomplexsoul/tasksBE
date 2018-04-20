@@ -59,6 +59,7 @@ let ConnectionService = (function(){
             });
         };
         let close = () => {
+            console.log('closing connection with id: ' + connection.threadId);
             connection.end();
         };
         let runSql = (sql) => {
