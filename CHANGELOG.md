@@ -8,9 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [Unreleased]
-* Entry type and API file generation.
 ### Changed
-## 1.1.1 (2018-05-04)
+## 1.1.3 (2018-05-04)
+<a name="1.1.3"></a>
+### Added
+* Entry type and API file generation.
+* Balance type and API file generation.
+* /entry/list route.
+* /balance/list route.
+
+## 1.1.2 (2018-05-04)
 <a name="1.1.2"></a>
 ### Added
 * New field in template "isRecordName", this provides MoSQL a way to display

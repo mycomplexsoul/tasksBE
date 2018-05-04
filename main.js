@@ -8,7 +8,9 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var taskAPI = require('./taskAPI.js');
 var accountAPI = require('./api/accountAPI.js');
-var movementAPI = require('./api/movementAPI.js');
+var MovementAPI = require('./api/MovementAPI.js');
+var BalanceAPI = require('./api/BalanceAPI.js');
+var EntryAPI = require('./api/EntryAPI.js');
 var MoScaffold = require('./MoScaffold.js');
 
 var utils = {
@@ -84,14 +86,27 @@ http.createServer(function (request, response) {
             break;
         }
         case '/movement/list': {
-            movementAPI.list(common);
+            MovementAPI.list(common);
+            break;
+        }
+        case '/balance/list': {
+            BalanceAPI.list(common);
+            break;
+        }
+        case '/entry/list': {
+            EntryAPI.list(common);
             break;
         }
         case '/generate': {
-            let model = MoSQL.createModel('movement');
-            MoScaffold.init(model);
-            MoScaffold.generateTypeFile();
-            MoScaffold.generateAPIFile();
+            let generate = (modelName) => {
+                let model = MoSQL.createModel(modelName);
+                MoScaffold.init(model);
+                MoScaffold.generateTypeFile();
+                MoScaffold.generateAPIFile();
+            };
+            generate('movement');
+            generate('entry');
+            generate('balance');
             response.end(JSON.stringify({operationOK: true, message: 'generation ok'}));
         }
    }
@@ -156,7 +171,7 @@ http.createServer(function (request, response) {
                 }
 
                 case '/movement/batch': {
-                    movementAPI.batch(requestCommon);
+                    MovementAPI.batch(requestCommon);
                     break;
                 }
             }
