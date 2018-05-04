@@ -81,31 +81,19 @@ let MoScaffold = (function(){
         str += line + 'let baseAPI = require("./api.js");';
         str += line;
         str += line + 'let API = (function(MoSQL, baseAPI){';
-        str += line + tab + `let config = {`;
-        str += line + tab + tab + `tableName: '${this._model.tableName}'`;
-        str += line + tab + tab + `, modelName: '${entityName}'`;
-        str += line + tab + tab + `, recordName: (r) => \`${pkFields.map(f => `\${${f.dbName}}`).join(' / ')}\``; // TODO: read external config json to override
-        str += line + tab + tab + `, pkFields: [${pkFields.map(f => `'${f.dbName}'`).join(', ')}]`; // this needs changes on api.js
-        str += line + tab + tab + `, recordRef: '${entityName}'`;
-        str += line + tab + tab + `, sql: {`;
-        str += line + tab + tab + tab + `list: 'select * from ${this._model.viewName}'`;
-        str += line + tab + tab + tab + `, exist: 'select * from ${this._model.viewName} where ${pkFields.map(f => `${f.dbName} = {{${f.dbName}}}`).join(' and ')}'`; // TODO: this needs changes on api.js
-        str += line + tab + tab + `}`;
-        str += line + tab + `};`;
-        
-        str += line;
+        str += line + tab + `baseAPI.setModel('${entityName}');`;
         str += line + tab + `let list = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('list', node, config);`;
+        str += line + tab + tab + `baseAPI.api('list', node);`;
         str += line + tab + `}`;
 
         str += line;
         str += line + tab + `let create = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('create', node, config);`;
+        str += line + tab + tab + `baseAPI.api('create', node);`;
         str += line + tab + `}`;
 
         str += line;
         str += line + tab + `let update = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('update', node, config);`;
+        str += line + tab + tab + `baseAPI.api('update', node);`;
         str += line + tab + `}`;
 
         str += line;
@@ -115,7 +103,7 @@ let MoScaffold = (function(){
         str += line + tab + tab + `, update`;
         str += line + tab + `}`;
         str += line + `})(MoSQL, baseAPI);`;
-        str += line + `module.exports = API`;
+        str += line + `module.exports = API;`;
 
         saveToFile(`${entityName}API.js`, str);
     }

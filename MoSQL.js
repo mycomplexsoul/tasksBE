@@ -135,6 +135,7 @@ var MoSQL = (function(MoGen){
      * .model
      * .db
      * .fields[n].value
+     * .name
      * .tableName
      * .viewName
      * .plainDBValues
@@ -547,14 +548,18 @@ var MoSQL = (function(MoGen){
             return t;
         };
 
+        t.getRecordNameFields = function(){
+            return t.fields.filter(f => f.isRecordName);
+        };
+
         // method to return a name that identifies the record
         t.recordName = function(){
             let name = '';
-            t.getPK().forEach(pk => {
-                name = MoGen.concat(name,' / ') + pk.value;
+            t.getRecordNameFields().forEach(f => {
+                name = MoGen.concat(name,' / ') + f.value;
             });
             return name;
-        }
+        };
 
         /**
          * Returns the SQL select query for the view.

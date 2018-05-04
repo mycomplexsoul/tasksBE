@@ -25,6 +25,7 @@
                 "DUPLICITY_ADD"
             ]
             , "displayName": "Movement Id"
+            , "isRecordName": true
         },{
             "templateId": "datetime"
             , "dbName": "mov_date"
@@ -32,6 +33,7 @@
             , "entName": "ApplicationDate"
             , "captureRequired": true
             , "displayName": "Date of Application"
+            , "isRecordName": true
         },{
             "templateId": "integer"
             , "dbName": "mov_ctg_currency"
@@ -45,6 +47,7 @@
             , "entName": "Amount"
             , "captureRequired": true
             , "displayName": "Amount"
+            , "isRecordName": true
         },{
             "templateId": "string"
             , "dbName": "mov_id_account"
@@ -132,6 +135,7 @@
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_type"
+            , "isRecordName": true
         },{
             "templateId": "catalog"
             , "linkedField": "_ctg_currency"
@@ -141,6 +145,7 @@
             , "size": 100
             , "originTable": "ACCOUNT"
             , "linkedField": "ACCOUNT1.acc_name"
+            , "isRecordName": true
         },{
             "templateId": "table"
             , "dbName": "mov_txt_account_to"

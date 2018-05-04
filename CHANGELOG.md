@@ -8,8 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [Unreleased]
+* Entry type and API file generation.
 ### Changed
-* Added real changelog.
+## 1.1.1 (2018-05-04)
+<a name="1.1.2"></a>
+### Added
+* New field in template "isRecordName", this provides MoSQL a way to display
+  the record identifiers by using more apropiated fields than the primary key.
+### Changed
+* Changes to API.js to use model metadata and remove config object needs.
+* Adjustments to MoScaffold API file generation to support API.js changes.
+* MoSQL.recordName() now uses "isRecordName" to provide display names for models
+  instead of Primary Key fields.
 
 <a name="1.1.1"></a>
 ## 1.1.1 (2018-04-20)

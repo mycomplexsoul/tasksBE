@@ -21,6 +21,7 @@
         , "specialRules": []
         , "displayName": ""
         , "tooltip": ""
+        , "isRecordName": false
     },{
         "templateId": "order"
         , "gridOrder": 0
