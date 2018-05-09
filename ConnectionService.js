@@ -78,12 +78,17 @@ let ConnectionService = (function(){
                 });
             });
             return p;
-        }
+        };
+        let runSqlArray = (sqlArray) => {
+            let responseArray = sqlArray.map((sql) => this.runSql(sql));
+            return responseArray;
+        };
         return {
             executeSql
             , getData
             , close
             , runSql
+            , runSqlArray
         };
     };
 

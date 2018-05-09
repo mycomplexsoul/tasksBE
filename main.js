@@ -85,6 +85,14 @@ http.createServer(function (request, response) {
             accountAPI.list(common);
             break;
         }
+        case '/movement/generateEntries': {
+            movementAPI.generateEntries({request,response,mysql,ConnectionService,post});
+            break;
+        }
+        case '/movement/generateBalance': {
+            movementAPI.generateBalance({request,response,mysql,ConnectionService,post});
+            break;
+        }
         case '/movement/list': {
             MovementAPI.list(common);
             break;
