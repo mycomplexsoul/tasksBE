@@ -3,17 +3,17 @@ let MoSQL = require("../MoSQL.js");
 let baseAPI = require("./api.js");
 
 let API = (function(MoSQL, baseAPI){
-	baseAPI.setModel('Balance');
+	let motor = baseAPI.forModel('Balance');
 	let list = function(node) {
-		baseAPI.api('list', node);
+		motor.api('list', node);
 	}
 
 	let create = function(node) {
-		baseAPI.api('create', node);
+		motor.api('create', node);
 	}
 
 	let update = function(node) {
-		baseAPI.api('update', node);
+		motor.api('update', node);
 	}
 
 	return {

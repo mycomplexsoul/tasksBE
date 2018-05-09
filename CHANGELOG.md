@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Changed
-## 1.1.3 (2018-05-04)
+## 1.1.3 (2018-05-09)
 <a name="1.1.3"></a>
 ### Added
 * Entry type and API file generation.
 * Balance type and API file generation.
+* /movement/list route.
 * /entry/list route.
 * /balance/list route.
 

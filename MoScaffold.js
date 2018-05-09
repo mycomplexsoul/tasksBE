@@ -81,19 +81,19 @@ let MoScaffold = (function(){
         str += line + 'let baseAPI = require("./api.js");';
         str += line;
         str += line + 'let API = (function(MoSQL, baseAPI){';
-        str += line + tab + `baseAPI.setModel('${entityName}');`;
+        str += line + tab + `let motor = baseAPI.forModel('${entityName}');`;
         str += line + tab + `let list = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('list', node);`;
+        str += line + tab + tab + `motor.api('list', node);`;
         str += line + tab + `}`;
 
         str += line;
         str += line + tab + `let create = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('create', node);`;
+        str += line + tab + tab + `motor.api('create', node);`;
         str += line + tab + `}`;
 
         str += line;
         str += line + tab + `let update = function(node) {`;
-        str += line + tab + tab + `baseAPI.api('update', node);`;
+        str += line + tab + tab + `motor.api('update', node);`;
         str += line + tab + `}`;
 
         str += line;
